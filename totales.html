@@ -1,52 +1,51 @@
 <!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Totales</title><style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;}body{background-color:#121214;color:#e1e1e6;padding:20px;display:flex;flex-direction:column;align-items:center;height:100vh;overflow:hidden;}h1{margin-bottom:15px;color:#4caf50;text-shadow:0 2px 4px rgba(0,0,0,0.5);}
-.config-container{display:flex;gap:20px;background-color:#1a1a1e;padding:12px;border-radius:12px;margin-bottom:15px;border:1px solid #29292e;flex-wrap:wrap;justify-content:center;}.config-group{display:flex;align-items:center;gap:10px;}.config-group select,.config-group input{padding:8px;border-radius:6px;border:1px solid #323238;background-color:#202024;color:white;font-weight:bold;}
-.workspace{display:flex;gap:25px;max-width:1300px;width:100%;height:calc(100vh - 120px);justify-content:center;align-items:stretch;}
-.campo-futbol{width:100%;max-width:650px;aspect-ratio:3/4;border:4px solid #fff;border-radius:12px;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:15px 0;overflow:hidden;background:linear-gradient(90deg,#226e26 0%,#226e26 10%,#29802d 10%,#29802d 20%,#226e26 20%,#226e26 30%,#29802d 30%,#29802d 40%,#226e26 40%,#226e26 50%,#29802d 50%,#29802d 60%,#226e26 60%,#226e26 70%,#29802d 70%,#29802d 80%,#226e26 80%,#226e26 90%,#29802d 90%,#29802d 100%),radial-gradient(circle,rgba(255,255,255,0.15) 0%,rgba(0,0,0,0) 70%);background-blend-mode:overlay;}
-.campo-futbol::before{content:'';position:absolute;top:50%;left:0;width:100%;height:2px;background-color:rgba(255,255,255,0.7);}.campo-futbol::after{content:'';position:absolute;top:50%;left:50%;width:120px;height:120px;border:2px solid rgba(255,255,255,0.7);border-radius:50%;transform:translate(-50%,-50%);}
+*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;}body{background-color:#121214;color:#e1e1e6;padding:20px;display:flex;flex-direction:column;align-items:center;height:100vh;overflow:hidden;}
+.workspace{display:flex;gap:25px;max-width:1300px;width:100%;height:calc(100vh - 40px);justify-content:center;align-items:stretch;}
+.campo-futbol{width:100%;max-width:650px;aspect-ratio:3/4;border:4px solid #fff;border-radius:12px;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:120px 0 15px 0;overflow:hidden;background:linear-gradient(90deg,#226e26 0%,#226e26 10%,#29802d 10%,#29802d 20%,#226e26 20%,#226e26 30%,#29802d 30%,#29802d 40%,#226e26 40%,#226e26 50%,#29802d 50%,#29802d 60%,#226e26 60%,#226e26 70%,#29802d 70%,#29802d 80%,#226e26 80%,#226e26 90%,#29802d 90%,#29802d 100%),radial-gradient(circle,rgba(255,255,255,0.15) 0%,rgba(0,0,0,0) 70%);background-blend-mode:overlay;}
+.campo-futbol::before{content:'';position:absolute;top:50%;left:0;width:100%;height:2px;background-color:rgba(255,255,255,0.7);}.campo-futbol::after{content:'';position:absolute;top:50%;left:50%;width:120px;height:120px;border:2px solid rgba(255, 255, 255, 0.7);border-radius:50%;transform:translate(-50%,-50%);}
+.panel-control-interno{position:absolute;top:15px;left:0;width:100%;display:flex;flex-direction:column;align-items:center;z-index:20;pointer-events:auto;padding:0 15px;}
+.cabecera-jornada-contenedor{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:12px;text-align:center;width:100%;}
+.cabecera-jornada-contenedor h1{color:#ffffff;text-shadow:0 2px 4px rgba(0,0,0,0.8);font-size:26px;font-weight:bold;margin:0;}
+.config-container{display:flex;gap:15px;background-color:rgba(18,18,20,0.5);padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.2);width:100%;justify-content:center;}
+.config-group{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:bold;color:#ffffff;text-shadow:0 1px 3px rgba(0,0,0,0.8);}.config-group select,.config-group input{padding:6px;border-radius:4px;border:1px solid rgba(255,255,255,0.3);background-color:#202024;color:white;font-weight:bold;font-size:12px;}
 .area-penal{position:absolute;left:50%;transform:translateX(-50%);width:62%;height:16%;border:2px solid rgba(255,255,255,0.7);z-index:1;}.area-top{top:0;border-top:none;}.area-bottom{bottom:0;border-bottom:none;}.linea-jugadores{display:flex;justify-content:space-around;align-items:center;width:100%;height:23%;position:relative;z-index:2;}
-.jugador-card{display:flex;flex-direction:column;align-items:center;width:105px;background-color:rgba(18,18,20,0.85);padding:6px;border-radius:8px;border:1px solid #323238;box-shadow:0 4px 10px rgba(0,0,0,0.3);}
-.nombre-container{display:flex;align-items:center;width:100%;gap:2px;}.jugador-input{flex-grow:1;width:10px;background:transparent;border:none;border-bottom:1px solid #44444e;color:#fff;font-size:11px;text-align:center;padding:2px 0;}.jugador-input:focus{outline:none;border-bottom-color:#4caf50;}
-.contador-onces{width:22px;font-size:11px;background:transparent;border:none;color:#4caf50;font-weight:bold;text-align:center;outline:none;-moz-appearance:textfield;}.contador-onces::-webkit-outer-spin-button,.contador-onces::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
-.foto-container{width:56px;height:56px;background-color:#29292e;border-radius:50%;border:2px solid #fff;display:flex;justify-content:center;align-items:center;position:relative;overflow:hidden;margin:4px 0;background-size:cover;background-position:center;background-repeat:no-repeat;}.btn-subir-foto{font-size:18px;color:#7c7c8a;z-index:1;pointer-events:none;}
+.jugador-card{display:flex;flex-direction:column;align-items:center;width:105px;background-color:rgba(18,18,20,0.85);padding:6px;border-radius:8px;border:1px solid #323238;box-shadow:0 4px 10px rgba(0,0,0,0.3);}.nombre-container{display:flex;align-items:center;width:100%;gap:2px;}.jugador-input{flex-grow:1;width:10px;background:transparent;border:none;border-bottom:1px solid #44444e;color:#fff;font-size:11px;text-align:center;padding:2px 0;}.jugador-input:focus{outline:none;border-bottom-color:#4caf50;}
+.contador-onces{width:22px;font-size:11px;background:transparent;border:none;color:#4caf50;font-weight:bold;text-align:center;outline:none;-moz-appearance:textfield;}.contador-onces::-webkit-outer-spin-button,.contador-onces::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}.foto-container{width:56px;height:56px;background-color:#29292e;border-radius:50%;border:2px solid #fff;display:flex;justify-content:center;align-items:center;position:relative;overflow:hidden;margin:4px 0;background-size:cover;background-position:center;background-repeat:no-repeat;}.btn-subir-foto{font-size:18px;color:#7c7c8a;z-index:1;pointer-events:none;}
 .equipo-container{display:flex;align-items:center;gap:4px;width:100%;margin-bottom:4px;}.escudo-miniatura{width:18px;height:18px;background-color:#323238;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background-size:contain;background-position:center;background-repeat:no-repeat;}.select-equipo{flex-grow:1;width:10px;background-color:#202024;color:#fff;border:1px solid #323238;border-radius:4px;font-size:10px;padding:2px;outline:none;}
 .pts-container{display:flex;align-items:center;justify-content:center;gap:4px;width:100%;}.jugador-pts{width:50px;background-color:#121214;border:1px solid #323238;color:#ffeb3b;font-weight:bold;font-size:11px;text-align:center;border-radius:4px;}.label-pts{font-size:11px;color:#ffeb3b;font-weight:bold;}
-/* BARRA LATERAL MÁS ESTRECHA (300PX) EN COLUMNA */
 .panel-suplentes{width:300px;background-color:#1a1a1e;padding:15px;border-radius:12px;border:1px solid #29292e;display:flex;flex-direction:column;overflow:hidden;}.panel-suplentes h2{font-size:18px;margin-bottom:12px;border-bottom:2px solid #4caf50;padding-bottom:6px;color:#4caf50;flex-shrink:0;}
 .lista-suplentes{display:flex;flex-direction:column;gap:6px;flex-grow:1;overflow-y:auto;}
 .suplente-fila{display:flex;flex-direction:row;align-items:center;background-color:#202024;padding:6px;border-radius:8px;border:1px solid #29292e;gap:8px;justify-content:flex-start;}.suplente-fila .foto-container{width:42px;height:42px;margin:0;flex-shrink:0;}.suplente-datos{display:flex;flex-direction:column;gap:3px;flex-grow:1;}.suplente-row-inline{display:flex;gap:4px;align-items:center;width:100%;}
-.select-posicion-suplente{font-size:10px;background-color:#e05320;color:white;border:none;padding:2px;border-radius:4px;font-weight:bold;flex-shrink:0;}.btn-reset{padding:8px 12px;border:none;border-radius:6px;background-color:#e05320;color:white;font-weight:bold;cursor:pointer;}
+.select-posicion-suplente{font-size:10px;background-color:#e05320;color:white;border:none;padding:2px;border-radius:4px;font-weight:bold;flex-shrink:0;}.btn-reset{padding:6px 10px;border:1px solid rgba(255,255,255,0.3);border-radius:4px;background-color:rgba(224,83,32,0.85);color:white;font-weight:bold;cursor:pointer;font-size:12px;}
 @media (max-width:950px){body{overflow:auto;height:auto;}.workspace{flex-direction:column;align-items:center;height:auto;}.panel-suplentes{width:100%;max-width:650px;}}
-</style></head>
-<body>
-    <h1>Equipo Ideal por TOTAL de puntos</h1>
-    <div class="config-container">
-        <div class="config-group">
-            <label>Sistema:</label>
-            <select id="formacionSelect" onchange="cambiarFormacion()">
-                <option value="4-4-2">4 - 4 - 2</option>
-                <option value="4-3-3">4 - 3 - 3</option>
-                <option value="3-5-2">3 - 5 - 2</option>
-                <option value="5-3-2">5 - 3 - 2</option>
-                <option value="4-5-1">4 - 5 - 1</option>
-            </select>
-        </div>
-        <div class="config-group">
-            <label>Nº Suplentes:</label>
-            <!-- Limitación estricta a un máximo de 6 -->
-            <input type="number" id="numSuplentesInput" value="5" min="0" max="6" onchange="actualizarNumeroSuplentes()">
-        </div>
-        <div class="config-group">
-            <button class="btn-reset" onclick="borrarTodo()">Borrar Todo</button>
-        </div>
-    </div>
-
+</style></head><body>
     <input type="file" id="globalImageInput" accept="image/*" style="display: none;">
-
     <div class="workspace">
         <div class="campo-futbol">
+            <div class="panel-control-interno">
+                <div class="cabecera-jornada-contenedor">
+                    <h1>Equipo Ideal por TOTAL de puntos</h1>
+                </div>
+                <div class="config-container">
+                    <div class="config-group">
+                        <label>Sistema:</label>
+                        <select id="formacionSelect" onchange="cambiarFormacion()">
+                            <option value="4-4-2">4 - 4 - 2</option>
+                            <option value="4-3-3">4 - 3 - 3</option>
+                            <option value="3-5-2">3 - 5 - 2</option>
+                            <option value="5-3-2">5 - 3 - 2</option>
+                            <option value="4-5-1">4 - 5 - 1</option>
+                        </select>
+                    </div>
+                    <div class="config-group">
+                        <label>Suplentes:</label>
+                        <input type="number" id="numSuplentesInput" value="5" min="0" max="6" onchange="actualizarNumeroSuplentes()">
+                    </div>
+                    <button class="btn-reset" onclick="borrarTodo()">Borrar Todo</button>
+                </div>
+            </div>
             <div class="area-penal area-top"></div>
-            <div class="linea-jugadores" id="linea-delanteros"></div>
+            <div class="linea-jugadores" id="linea-delanteros" style="margin-top: 55px;"></div>
             <div class="linea-jugadores" id="linea-medios"></div>
             <div class="linea-jugadores" id="linea-defensas"></div>
             <div class="linea-jugadores" id="linea-portero"></div>
