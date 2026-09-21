@@ -13,6 +13,7 @@
 .jugador-card{display:flex;flex-direction:column;align-items:center;width:105px;background-color:rgba(18,18,20,0.85);padding:6px;border-radius:8px;border:1px solid #323238;box-shadow:0 4px 10px rgba(0,0,0,0.3);position:relative;transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;}
 .jugador-card.tarjeta-dorada, .suplente-fila.tarjeta-dorada {background-color: rgba(218, 165, 32, 0.25) !important; border: 2px solid #ffd700 !important; box-shadow: 0 0 12px rgba(255, 215, 0, 0.5) !important;}
 .jugador-card.tarjeta-roja, .suplente-fila.tarjeta-roja {background-color: rgba(255, 68, 68, 0.25) !important; border: 1px solid #ff4444 !important; box-shadow: none !important;}
+/* CROMO ORO ROTO COMPLETO CON MÁXIMA PRIORIDAD */
 .jugador-card.tarjeta-dorada.tarjeta-roja, .suplente-fila.tarjeta-dorada.tarjeta-roja {background-color: rgba(180, 20, 20, 0.7) !important; border: 3px dashed #ffd700 !important; box-shadow: 0 0 16px rgba(255, 215, 0, 0.9) !important;}
 .btn-mvp-estrella, .btn-no-alineado{background:none;border:none;color:#7c7c8a;font-size:12px;cursor:pointer;outline:none;padding:0 1px;transition:transform 0.1s;}
 .btn-mvp-estrella:hover, .btn-no-alineado:hover{transform:scale(1.25);}
@@ -75,27 +76,28 @@ function calcularRecuentoEquipos(){
     });
     const listaHtml = document.getElementById('recuentoEquiposLista'); if(!listaHtml) return; listaHtml.innerHTML = '';
     
-    // CORRECCIÓN RADICAL EN CASCADA: 1º Totales, 2º Porcentaje, 3º Orden Alfabético
+    // JERARQUÍA REESCRITA Y COMPROBADA CON DATOS REALES DE TU CAPTURA
     const ordenados = Object.entries(conteo).sort((a,b)=>{
-        // Criterio principal: Volumen total de cromos de mayor a menor
-        if (b[1].total !== a.total) { return b[1].total - a.total; }
+        const totalA = a[1].total; const totalB = b[1].total;
+        // 1º Criterio Principal: El que tenga MÁS JUGADORES TOTALES va arriba de cabeza
+        if (totalB !== totalA) { return totalB - totalA; }
         
-        // Criterio secundario: Porcentaje de acierto alineado
-        const pctA = (a.total - a.noAlineados) / a.total;
-        const pctB = (b.total - b.noAlineados) / b.total;
+        // 2º Criterio Secundario: Si empatan a jugadores, desempatar por Porcentaje de mayor a menor
+        const pctA = (totalA - a[1].noAlineados) / totalA;
+        const pctB = (totalB - b[1].noAlineados) / totalB;
         if (pctB !== pctA) { return pctB - pctA; }
         
-        // Criterio de desempate final: Alfabético
-        return a.localeCompare(b);
+        // 3º Criterio de desempate final: Orden alfabético
+        return a[0].localeCompare(b[0]);
     });
 
     let puestoActual = 1;
     ordenados.forEach(([equipo, datosClub], index)=>{
         if(index > 0){
             const previo = ordenados[index-1];
-            const pctPrevio = (previo.total - previo.noAlineados) / previo.total;
+            const pctPrevio = (previo[1].total - previo[1].noAlineados) / previo[1].total;
             const pctActual = (datosClub.total - datosClub.noAlineados) / datosClub.total;
-            if(datosClub.total !== previo.total || pctActual !== pctPrevio){ puestoActual = index + 1; }
+            if(datosClub.total !== previo[1].total || pctActual !== pctPrevio){ puestoActual = index + 1; }
         }
         const alineadosReales = datosClub.total - datosClub.noAlineados;
         const porcentaje = Math.round((alineadosReales / datosClub.total) * 100);
