@@ -18,8 +18,9 @@
 @media (max-width:950px){body{overflow:auto;height:auto;}.workspace{flex-direction:column;align-items:center;height:auto;}.panel-suplentes{width:100%;max-width:650px;}.lista-suplentes{grid-template-columns:repeat(auto-fit,minmax(130px,1fr));}}
 </style></head>
 <body>
-    <div style="width: 100%; max-width: 650px; display: flex; justify-content: center; margin-bottom: 15px;">
-        <h1 style="color: #4caf50; font-size: 26px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); text-align: center; font-weight: bold; margin: 0;">Equipo Ideal Jornada</h1>
+    <div style="width: 100%; max-width: 650px; display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px; margin-left: auto; margin-right: auto; text-align: center;">
+        <h1 style="color: #4caf50; font-size: 26px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-weight: bold; margin: 0;">Equipo Ideal Jornada</h1>
+        <input type="number" id="numeroJornadaInput" value="1" min="1" max="50" style="width: 50px; padding: 4px; border-radius: 6px; border: 1px solid #323238; background-color: #202024; color: #4caf50; font-size: 20px; font-weight: bold; text-align: center; outline: none;" oninput="guardarDatos()">
     </div>
     <div class="config-container">
         <div class="config-group">
