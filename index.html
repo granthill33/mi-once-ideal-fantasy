@@ -45,10 +45,9 @@
 .btn-foto:hover{background-color:#00c8ff;color:white;}.btn-reset:hover{background-color:#ff4444;color:white;}
 @media (max-width:950px){body{overflow:auto;height:auto;}.workspace{flex-direction:column;align-items:center;height:auto;}.panel-suplentes{width:100%;max-width:650px;}.lista-suplentes{grid-template-columns:repeat(2, 1fr);}}
 </style>
-<!-- LIBRERÍA AUTORIZADA PARA HACER FOTOS DE LA WEB SIN SERVIDOR BUSINESS -->
 <script src="https://cloudflare.com"></script>
 </head>
-<body><input type="file" id="globalImageInput" accept="image/*" style="display: none;"><div class="workspace"><div class="campo-futbol" id="campoParaCaptura"><div class="panel-control-interno"><div class="cabecera-jornada-contenedor"><h1>Equipo Ideal Jornada</h1><input type="number" id="numeroJornadaInput" value="1" min="1" max="50" class="input-selector-jornada" oninput="cambiarJornadaManual()"></div><div class="config-container"><div class="config-group"><label>Sistema:</label><select id="formacionSelect" onchange="cambiarFormacion()"><option value="4-4-2">4 - 4 - 2</option><option value="4-3-3">4 - 3 - 3</option><option value="3-5-2">3 - 5 - 2</option><option value="5-3-2">5 - 3 - 2</option><option value="4-5-1">4 - 5 - 1</option></select></div><div class="config-group"><label>Suplentes:</label><input type="number" id="numSuplentesInput" value="7" min="0" max="12" onchange="actualizarNumeroSuplentes()"></div><button class="btn-reset" onclick="borrarTodo()">Borrar Todo</button><!-- NUEVO BOTÓN PARA GENERAR LA IMAGEN PNG AL INSTANTE --><button class="btn-foto" onclick="descargarImagenOnce()">Descargar Once 📸</button></div></div><div class="area-penal area-top"></div><div class="linea-jugadores" id="linea-delanteros" style="margin-top: 55px;"></div><div class="linea-jugadores" id="linea-medios"></div><div class="linea-jugadores" id="linea-defensas"></div><div class="linea-jugadores" id="linea-portero"></div><div class="area-penal area-bottom"></div><div class="marcador-total-campo"><span>TOTAL:</span><div class="caja-num" id="marcadorSumaTotal">0</div></div></div><div class="panel-suplentes"><h2>Banquillo</h2><div class="lista-suplentes" id="listaSuplentes"></div><div class="recuento-equipos-container"><div class="cabecera-recuento-dinamica"><h3>Jugadores por Club</h3><button class="btn-calcular-tabla" onclick="calcularRecuentoEquipos()">Actualizar Tabla 🔄</button></div><div class="lista-recuento-datos" id="recuentoEquiposLista"></div></div></div></div><script>
+<body><input type="file" id="globalImageInput" accept="image/*" style="display: none;"><div class="workspace"><div class="campo-futbol" id="campoParaCaptura"><div class="panel-control-interno"><div class="cabecera-jornada-contenedor"><h1>Equipo Ideal Jornada</h1><input type="number" id="numeroJornadaInput" value="1" min="1" max="50" class="input-selector-jornada" oninput="cambiarJornadaManual()"></div><div class="config-container"><div class="config-group"><label>Sistema:</label><select id="formacionSelect" onchange="cambiarFormacion()"><option value="4-4-2">4 - 4 - 2</option><option value="4-3-3">4 - 3 - 3</option><option value="3-5-2">3 - 5 - 2</option><option value="5-3-2">5 - 3 - 2</option><option value="4-5-1">4 - 5 - 1</option></select></div><div class="config-group"><label>Suplentes:</label><input type="number" id="numSuplentesInput" value="7" min="0" max="12" onchange="actualizarNumeroSuplentes()"></div><button class="btn-reset" onclick="borrarTodo()">Borrar Todo</button><button class="btn-foto" onclick="descargarImagenOnce()">Descargar Once 📸</button></div></div><div class="area-penal area-top"></div><div class="linea-jugadores" id="linea-delanteros" style="margin-top: 55px;"></div><div class="linea-jugadores" id="linea-medios"></div><div class="linea-jugadores" id="linea-defensas"></div><div class="linea-jugadores" id="linea-portero"></div><div class="area-penal area-bottom"></div><div class="marcador-total-campo"><span>TOTAL:</span><div class="caja-num" id="marcadorSumaTotal">0</div></div></div><div class="panel-suplentes"><h2>Banquillo</h2><div class="lista-suplentes" id="listaSuplentes"></div><div class="recuento-equipos-container"><div class="cabecera-recuento-dinamica"><h3>Jugadores por Club</h3><button class="btn-calcular-tabla" onclick="calcularRecuentoEquipos()">Actualizar Tabla 🔄</button></div><div class="lista-recuento-datos" id="recuentoEquiposLista"></div></div></div></div><script>
 const equipos=["Eibar","Oviedo","Las Palmas","Sporting","Osasuna","Recreativo","Marino","Levante","Cádiz","Real Unión","Lleida","Celta","Barcelona","Real Sociedad","Guadalajara","Coruxo","Alavés","Valencia","Huracán","Deportivo"];
 function actualizarEscudoVisual(idCard){const select=document.querySelector(`[data-id="${idCard}"][data-tipo="equipo"]`);const divEscudo=document.querySelector(`[data-escudo-id="${idCard}"]`);if(select&&divEscudo)divEscudo.style.backgroundImage=`url('./Escudos/${select.value}.png')`;calcularRecuentoEquipos();}
 function actualizarFotoJugador(idCard){const divFoto=document.querySelector(`[data-img-id="${idCard}"]`);if(!divFoto)return;const txtPlus=divFoto.querySelector('.btn-subir-foto');const inputNombre=document.querySelector(`[data-id="${idCard}"][data-tipo="nombre"]`);const nombre=inputNombre?inputNombre.value.trim():"";if(nombre!==""){const nombreFormateado=nombre.replace(/\s+/g,'_');divFoto.style.backgroundImage=`url('./Jugadores/${nombreFormateado}.webp')`;if(txtPlus)txtPlus.style.display='none';}else{divFoto.style.backgroundImage='none';if(txtPlus)txtPlus.style.display='block';}}
@@ -81,13 +80,13 @@ function calcularRecuentoEquipos(){
     });
     const listaHtml = document.getElementById('recuentoEquiposLista'); if(!listaHtml) return; listaHtml.innerHTML = '';
     
+    // ARREGLADO: CORRECCIÓN DE SINTAXIS ESTRICTA EN LA ORDENACIÓN EN CASCADA
     const ordenados = Object.entries(conteo).sort((a, b) => {
-        const clubA = a[1]; const clubB = b.1;
+        const clubA = a[1]; const clubB = b[1];
+        if (clubB.titularesCampo !== clubA.titularesCampo) { return clubB.titularesCampo - clubA.titularesCampo; }
         const pctA = (clubA.total - clubA.noAlineados) / clubA.total;
         const pctB = (clubB.total - clubB.noAlineados) / clubB.total;
-        const pesoA = (clubA.titularesCampo * 10000000) + (Math.round(pctA * 100) * 10000);
-        const pesoB = (clubB.titularesCampo * 10000000) + (Math.round(pctB * 100) * 10000);
-        if (pesoB !== pesoA) { return pesoB - pesoA; }
+        if (pctB !== pctA) { return pctB - pctA; }
         return a[0].localeCompare(b[0]);
     });
     let puestoActual = 1;
@@ -137,7 +136,6 @@ function guardarDatos(){
     document.querySelectorAll('.workspace input,.workspace select').forEach(el=>{const id=el.dataset.id;if(id){if(!datos.jugadores[id])datos.jugadores[id]={};datos.jugadores[id][el.dataset.tipo]=el.value;}});
     localStorage.setItem(obtenerStorageKey(),JSON.stringify(datos));
 }
-// NUEVA FUNCIÓN QUE HACE LA FOTO AUTOMÁTICA DEL CAMPO EN PC Y MÓVIL
 function descargarImagenOnce(){
     const campo = document.getElementById('campoParaCaptura'); if(!campo) return;
     const configCont = campo.querySelector('.config-container'); if(configCont) configCont.style.display = 'none';
