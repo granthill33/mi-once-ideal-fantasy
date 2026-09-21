@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Jornada</title><style>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Equipo Ideal Jornada</title><style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;}body{background-color:#121214;color:#e1e1e6;padding:20px;display:flex;flex-direction:column;align-items:center;height:100vh;overflow:hidden;}h1{margin-bottom:15px;color:#4caf50;}
 .config-container{display:flex;gap:20px;background-color:#1a1a1e;padding:12px;border-radius:12px;margin-bottom:15px;border:1px solid #29292e;}.config-group{display:flex;align-items:center;gap:10px;}.config-group select,.config-group input{padding:8px;border-radius:6px;border:1px solid #323238;background-color:#202024;color:white;font-weight:bold;}
 .workspace{display:flex;gap:25px;max-width:1300px;width:100%;height:calc(100vh - 120px);justify-content:center;align-items:stretch;}
@@ -38,6 +38,9 @@
             <button class="btn-reset" onclick="borrarTodo()">Borrar Todo</button>
         </div>
     </div>
+    
+    <input type="file" id="globalImageInput" accept="image/*" style="display: none;">
+
     <div class="workspace">
         <div class="campo-futbol">
             <div class="area-penal area-top"></div>
@@ -54,8 +57,26 @@
     </div>
 <script>
 const equipos=["Eibar","Oviedo","Las Palmas","Sporting","Osasuna","Recreativo","Marino","Levante","Cádiz","Real Unión","Lleida","Celta","Barcelona","Real Sociedad","Guadalajara","Coruxo","Alavés","Valencia","Huracán","Deportivo"];
+let idJugadorActivo = null;
+
+document.getElementById('globalImageInput').onchange = function(e) {
+    const file = e.target.files[0];
+    if (file && idJugadorActivo) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            const container = document.querySelector(`[data-img-id="${idJugadorActivo}"]`);
+            if (container) {
+                container.style.backgroundImage = `url('${ev.target.result}')`;
+                const txt = container.querySelector('.btn-subir-foto'); if (txt) txt.style.display = 'none';
+                localStorage.setItem('img_' + idJugadorActivo, ev.target.result);
+                guardarDatos();
+            }
+        }; reader.readAsDataURL(file);
+    }
+};
+
+function activarSubidaFoto(id) { idJugadorActivo = id; document.getElementById('globalImageInput').click(); }
 function actualizarEscudoVisual(idCard){const select=document.querySelector(`[data-id="${idCard}"][data-tipo="equipo"]`);const divEscudo=document.querySelector(`[data-escudo-id="${idCard}"]`);if(select&&divEscudo)divEscudo.style.backgroundImage=`url('./Escudos/${select.value}.png')`;}
-function actualizarFotoJugador(idCard){const divFoto=document.querySelector(`[data-img-id="${idCard}"]`);if(!divFoto)return;const txtPlus=divFoto.querySelector('.btn-subir-foto');const inputNombre=document.querySelector(`[data-id="${idCard}"][data-tipo="nombre"]`);const nombre=inputNombre?inputNombre.value.trim():"";if(nombre!==""){const nombreFormateado=nombre.replace(/\s+/g,'_');divFoto.style.backgroundImage=`url('./Jugadores/${nombreFormateado}.webp')`;if(txtPlus)txtPlus.style.display='none';}else{divFoto.style.backgroundImage='none';if(txtPlus)txtPlus.style.display='block';}}
 
 function guardarDatos(){
     const datos={formacion:document.getElementById('formacionSelect').value,numSuplentes:document.getElementById('numSuplentesInput').value,jugadores:[]};
@@ -72,17 +93,19 @@ function cargarDatos(){
         const eq=document.querySelector(`[data-id="${id}"][data-tipo="equipo"]`);if(eq){eq.value=J.equipo||'Eibar';actualizarEscudoVisual(id);}
         const pts=document.querySelector(`[data-id="${id}"][data-tipo="pts"]`);if(pts)pts.value=J.pts||'';
         const pos=document.querySelector(`[data-id="${id}"][data-tipo="posicion"]`);if(pos)pos.value=J.posicion||'POR';
-        const onc=document.querySelector(`[data-id="${id}"][data-tipo="onces"]`);if(onc)onc.value=J.onces||'0';actualizarFotoJugador(id);
+        const onc=document.querySelector(`[data-id="${id}"][data-tipo="onces"]`);if(onc)onc.value=J.onces||'0';
+        const imgData=localStorage.getItem('img_'+id);
+        if(imgData){const container=document.querySelector(`[data-img-id="${id}"]`);if(container){container.style.backgroundImage=`url('${imgData}')`;const span=container.querySelector('.btn-subir-foto');if(span)span.style.display='none';}}
     });
 }
-function borrarTodo(){if(confirm('¿Borrar historial?')){localStorage.removeItem('save_jornada');location.reload();}}
+function borrarTodo(){if(confirm('¿Borrar historial?')){localStorage.clear();location.reload();}}
 function crearTarjetaJugador(p,id,s=false){
     const c=document.createElement('div');c.className=s?'suplente-fila':'jugador-card';const nameContainer=document.createElement('div');nameContainer.className='nombre-container';
-    const inp=document.createElement('input');inp.type='text';inp.className='jugador-input';inp.placeholder=p;inp.dataset.id=id;inp.dataset.tipo='nombre';inp.oninput=function(){actualizarFotoJugador(id);guardarDatos();};
+    const inp=document.createElement('input');inp.type='text';inp.className='jugador-input';inp.placeholder=p;inp.dataset.id=id;inp.dataset.tipo='nombre';inp.oninput=guardarDatos;
     const l1=document.createElement('span');l1.style.fontSize="11px";l1.style.color="#7c7c8a";l1.innerText="(";
     const inpOnces=document.createElement('input');inpOnces.type='number';inpOnces.className='contador-onces';inpOnces.value='0';inpOnces.min='0';inpOnces.dataset.id=id;inpOnces.dataset.tipo='onces';inpOnces.oninput=guardarDatos;
     const l2=document.createElement('span');l2.style.fontSize="11px";l2.style.color="#7c7c8a";l2.innerText=")";nameContainer.appendChild(inp);nameContainer.appendChild(l1);nameContainer.appendChild(inpOnces);nameContainer.appendChild(l2);
-    const f=document.createElement('div');f.className='foto-container';f.dataset.imgId=id;const txtF=document.createElement('span');txtF.className='btn-subir-foto';txtF.innerText='👤';f.appendChild(txtF);
+    const f=document.createElement('div');f.className='foto-container';f.dataset.imgId=id;f.onclick=function(){activarSubidaFoto(id);};const txtF=document.createElement('span');txtF.className='btn-subir-foto';txtF.innerText='+';f.appendChild(txtF);
     const d=document.createElement('div');d.className='suplente-datos';const eqContainer=document.createElement('div');eqContainer.className='equipo-container';const escudo=document.createElement('div');escudo.className='escudo-miniatura';escudo.dataset.escudoId=id;
     const selEq=document.createElement('select');selEq.className='select-equipo';selEq.dataset.id=id;selEq.dataset.tipo='equipo';selEq.onchange=function(){actualizarEscudoVisual(id);guardarDatos();};
     equipos.forEach(eq=>{const o=document.createElement('option');o.value=eq;o.innerText=eq;selEq.appendChild(o);});eqContainer.appendChild(escudo);eqContainer.appendChild(selEq);
@@ -96,11 +119,11 @@ function crearTarjetaJugador(p,id,s=false){
 function cambiarFormacion(save=true){
     const f=document.getElementById('formacionSelect').value;const[def,med,del]=f.split('-').map(Number);document.getElementById('linea-delanteros').innerHTML='';document.getElementById('linea-medios').innerHTML='';document.getElementById('linea-defensas').innerHTML='';document.getElementById('linea-portero').innerHTML='';
     document.getElementById('linea-portero').appendChild(crearTarjetaJugador('Portero','tit_por'));for(let i=0;i<def;i++)document.getElementById('linea-defensas').appendChild(crearTarjetaJugador('Defensa','tit_def_'+i));for(let i=0;i<med;i++)document.getElementById('linea-medios').appendChild(crearTarjetaJugador('Medio','tit_med_'+i));for(let i=0;i<del;i++)document.getElementById('linea-delanteros').appendChild(crearTarjetaJugador('Delantero','tit_del_'+i));
-    document.querySelectorAll('.select-equipo').forEach(select=>{const id=select.dataset.id;actualizarEscudoVisual(id);actualizarFotoJugador(id);});if(save)guardarDatos();
+    document.querySelectorAll('.select-equipo').forEach(select=>{actualizarEscudoVisual(select.dataset.id);});if(save)guardarDatos();
 }
 function actualizarNumeroSuplentes(save=true){
     const l=document.getElementById('listaSuplentes');l.innerHTML='';let c=parseInt(document.getElementById('numSuplentesInput').value);if(isNaN(c)||c<0)c=0;if(c>25)c=25;
-    for(let i=1;i<=c;i++){const cardComp=crearTarjetaJugador(`Sup ${i}`,`sup_${i}`,true);l.appendChild(cardComp);actualizarEscudoVisual(`sup_${i}`);actualizarFotoJugador(`sup_${i}`);}if(save)guardarDatos();
+    for(let i=1;i<=c;i++){const cardComp=crearTarjetaJugador(`Sup ${i}`,`sup_${i}`,true);l.appendChild(cardComp);actualizarEscudoVisual(`sup_${i}`);}if(save)guardarDatos();
 }
 cambiarFormacion(false);actualizarNumeroSuplentes(false);cargarDatos();
 </script></body></html>
