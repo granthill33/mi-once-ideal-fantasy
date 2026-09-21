@@ -75,25 +75,27 @@ function calcularRecuentoEquipos(){
     });
     const listaHtml = document.getElementById('recuentoEquiposLista'); if(!listaHtml) return; listaHtml.innerHTML = '';
     
-    // SISTEMA DE ORDENACIÓN ARREGLADO Y BLINDADO DEFINITIVAMENTE
+    // CORRECCIÓN RADICAL EN CASCADA: 1º Totales, 2º Porcentaje, 3º Orden Alfabético
     const ordenados = Object.entries(conteo).sort((a,b)=>{
-        const pctA = (a[1].total - a[1].noAlineados) / a[1].total;
-        const pctB = (b[1].total - b[1].noAlineados) / b[1].total;
-        // 1. Mandar arriba al que tenga mayor porcentaje de acierto
+        // Criterio principal: Volumen total de cromos de mayor a menor
+        if (b[1].total !== a.total) { return b[1].total - a.total; }
+        
+        // Criterio secundario: Porcentaje de acierto alineado
+        const pctA = (a.total - a.noAlineados) / a.total;
+        const pctB = (b.total - b.noAlineados) / b.total;
         if (pctB !== pctA) { return pctB - pctA; }
-        // 2. Si empatan a porcentaje, va primero el que tenga más volumen total de jugadores
-        if (b[1].total !== a[1].total) { return b[1].total - a[1].total; }
-        // 3. Si empatan en todo, orden alfabético estricto
-        return a[0].localeCompare(b[0]);
+        
+        // Criterio de desempate final: Alfabético
+        return a.localeCompare(b);
     });
 
     let puestoActual = 1;
     ordenados.forEach(([equipo, datosClub], index)=>{
         if(index > 0){
             const previo = ordenados[index-1];
-            const pctPrevio = (previo[1].total - previo[1].noAlineados) / previo[1].total;
+            const pctPrevio = (previo.total - previo.noAlineados) / previo.total;
             const pctActual = (datosClub.total - datosClub.noAlineados) / datosClub.total;
-            if(pctActual !== pctPrevio || datosClub.total !== previo[1].total){ puestoActual = index + 1; }
+            if(datosClub.total !== previo.total || pctActual !== pctPrevio){ puestoActual = index + 1; }
         }
         const alineadosReales = datosClub.total - datosClub.noAlineados;
         const porcentaje = Math.round((alineadosReales / datosClub.total) * 100);
