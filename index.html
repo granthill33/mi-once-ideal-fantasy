@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Jornada</title><style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;}body{background-color:#121214;color:#e1e1e6;padding:20px;display:flex;flex-direction:column;align-items:center;height:100vh;overflow:hidden;}
-/* CAJA INDEPENDIENTE CENTRADA MATEMÁTICAMENTE CON LOS 650PX DEL CAMPO VERDE */
-.cabecera-jornada-contenedor{width:100%;max-width:650px;display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:15px;margin-left:auto;margin-right:auto;text-align:center;position:relative;}
+/* COMPENSACIÓN MATEMÁTICA: EMPUJA EL TÍTULO HACIA LA IZQUIERDA PARA CLAVARLO CON EL CAMPO */
+.cabecera-jornada-contenedor{width:100%;max-width:1115px;display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:15px;text-align:center;padding-right:440px;}
 .cabecera-jornada-contenedor h1{color:#ffffff;text-shadow:0 2px 4px rgba(0,0,0,0.8);font-size:26px;font-weight:bold;margin:0;}
 .input-selector-jornada{width:52px;padding:4px;border-radius:6px;border:1px solid #323238;background-color:#202024;color:#4caf50;font-size:20px;font-weight:bold;text-align:center;outline:none;}
 .config-container{display:flex;gap:20px;background-color:#1a1a1e;padding:12px;border-radius:12px;margin-bottom:15px;border:1px solid #29292e;flex-wrap:wrap;justify-content:center;}.config-group{display:flex;align-items:center;gap:10px;}.config-group select,.config-group input{padding:8px;border-radius:6px;border:1px solid #323238;background-color:#202024;color:white;font-weight:bold;}
@@ -14,10 +14,10 @@
 .pts-container{display:flex;align-items:center;justify-content:center;gap:4px;width:100%;}.jugador-pts{width:50px;background-color:#121214;border:1px solid #323238;color:#ffeb3b;font-weight:bold;font-size:11px;text-align:center;border-radius:4px;}.label-pts{font-size:11px;color:#ffeb3b;font-weight:bold;}.panel-suplentes{width:440px;background-color:#1a1a1e;padding:15px;border-radius:12px;border:1px solid #29292e;display:flex;flex-direction:column;overflow:hidden;}.panel-suplentes h2{font-size:18px;margin-bottom:12px;border-bottom:2px solid #4caf50;padding-bottom:6px;color:#4caf50;flex-shrink:0;}
 .lista-suplentes{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px;flex-grow:1;align-content:start;overflow-y:hidden;}.suplente-fila{display:flex;flex-direction:column;align-items:center;background-color:#202024;padding:6px;border-radius:8px;border:1px solid #29292e;justify-content:space-between;}.suplente-fila .foto-container{width:40px;height:40px;margin:2px 0;}.suplente-datos{display:flex;flex-direction:column;gap:3px;width:100%;}.suplente-row-inline{display:flex;gap:4px;align-items:center;width:100%;}
 .select-posicion-suplente{font-size:10px;background-color:#e05320;color:white;border:none;padding:2px;border-radius:4px;font-weight:bold;flex-shrink:0;}.btn-reset{padding:8px 12px;border:none;border-radius:6px;background-color:#e05320;color:white;font-weight:bold;cursor:pointer;}
-@media (max-width:950px){body{overflow:auto;height:auto;}.workspace{flex-direction:column;align-items:center;height:auto;}.panel-suplentes{width:100%;max-width:650px;}.lista-suplentes{grid-template-columns:repeat(auto-fit,minmax(130px,1fr));}}
+@media (max-width:950px){body{overflow:auto;height:auto;}.cabecera-jornada-contenedor{padding-right:0;}.workspace{flex-direction:column;align-items:center;height:auto;}.panel-suplentes{width:100%;max-width:650px;}.lista-suplentes{grid-template-columns:repeat(auto-fit,minmax(130px,1fr));}}
 </style></head>
 <body>
-    <!-- CONTENEDOR CON SELECTOR INTERACTIVO Y NOMBRE DE JORNADA -->
+    <!-- LA CAJA DE CONTROL DEFINITIVA CON SU SELECTOR DE JORNADAS -->
     <div class="cabecera-jornada-contenedor">
         <h1>Equipo Ideal Jornada</h1>
         <input type="number" id="numeroJornadaInput" value="1" min="1" max="50" class="input-selector-jornada" oninput="guardarDatos()">
