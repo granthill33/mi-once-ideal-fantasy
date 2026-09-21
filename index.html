@@ -64,44 +64,52 @@ function sumarPuntosTitulares(){
 
 function calcularRecuentoEquipos(){
     const conteo={};
+    // ESCANEO LIMPIO FILTRANDO ESTRICTAMENTE TITULARES VS TOTALES
     document.querySelectorAll('.workspace .select-equipo').forEach(select=>{
         const cardId = select.dataset.id; const inputNombre = document.querySelector(`[data-id="${cardId}"][data-tipo="nombre"]`);
         if(inputNombre && inputNombre.value.trim() !== ""){
-            const eq = select.value; if(!conteo[eq]) conteo[eq] = { total: 0, noAlineados: 0 };
+            const eq = select.value; if(!conteo[eq]) conteo[eq] = { titularesCampo: 0, total: 0, noAlineados: 0 };
             conteo[eq].total += 1;
+            if(cardId.startsWith('tit_')) { conteo[eq].titularesCampo += 1; }
             const btnNoAl = document.querySelector(`[data-btn-noal="${cardId}"]`);
             if(btnNoAl && btnNoAl.classList.contains('activo')) { conteo[eq].noAlineados += 1; }
         }
     });
     const listaHtml = document.getElementById('recuentoEquiposLista'); if(!listaHtml) return; listaHtml.innerHTML = '';
     
+    // ORDENACIÓN CON PRIORIDAD ABSOLUTA EN EL ONCE TITULAR (CAMPO DE FÚTBOL)
     const ordenados = Object.entries(conteo).sort((a,b)=>{
-        const totalA = a.total; const totalB = b.total;
-        if (totalB !== totalA) { return totalB - totalA; }
-        const pctA = (totalA - a.noAlineados) / totalA;
-        const pctB = (totalB - b.noAlineados) / totalB;
+        // 1º Criterio Rey: Quién tiene más jugadores en el ONCE TITULAR (campo)
+        if (b[1].titularesCampo !== a.1.titularesCampo) { return b[1].titularesCampo - a[1].titularesCampo; }
+        
+        // 2º Criterio Secundario: Porcentaje de efectividad alineada
+        const pctA = (a[1].total - a[1].noAlineados) / a[1].total;
+        const pctB = (b[1].total - b[1].noAlineados) / b[1].total;
         if (pctB !== pctA) { return pctB - pctA; }
-        return a.localeCompare(b);
+        
+        // 3º Criterio Final: Orden Alfabético
+        return a[0].localeCompare(b[0]);
     });
 
     let puestoActual = 1;
     ordenados.forEach(([equipo, datosClub], index)=>{
         if(index > 0){
-            const previo = ordenados[index-1];
+            const previo = ordenados[index-1][1];
             const pctPrevio = (previo.total - previo.noAlineados) / previo.total;
             const pctActual = (datosClub.total - datosClub.noAlineados) / datosClub.total;
-            if(datosClub.total !== previo.total || pctActual !== pctPrevio){ puestoActual = index + 1; }
+            if(datosClub.titularesCampo !== ordenados[index-1][1].titularesCampo || pctActual !== pctPrevio){ puestoActual = index + 1; }
         }
         const alineadosReales = datosClub.total - datosClub.noAlineados;
         const porcentaje = Math.round((alineadosReales / datosClub.total) * 100);
         const item = document.createElement('div');item.className='recuento-fila-item';
         const pto = document.createElement('span');pto.className='recuento-puesto';pto.innerText=`${puestoActual}º`;item.appendChild(pto);
-        const esc = document.createElement('div');item.appendChild(esc);esc.className='escudo-miniatura';esc.style.backgroundImage=`url('./Escudos/${equipo}.png')`;
+        const esc = document.createElement('div');item.appendChild(esc);esc.className='escudo-miniatura';escudoId=equipo;esc.style.backgroundImage=`url('./Escudos/${equipo}.png')`;
         const txt = document.createElement('span');item.appendChild(txt);txt.innerText=equipo;
         const bar = document.createElement('span');item.appendChild(bar);bar.className='recuento-barra-visual';
         bar.innerText = `${alineadosReales}/${datosClub.total} (${porcentaje}%)`; listaHtml.appendChild(item);
     });
 }
+
 function toggleMvp(idCard){
     const boton = document.querySelector(`[data-btn-mvp="${idCard}"]`);if(!boton) return;
     const yaActivo = boton.classList.contains('activo');
@@ -120,10 +128,8 @@ function toggleNoAlineado(idCard){
     }
     calcularRecuentoEquipos(); guardarDatos();
 }
-
 function obtenerStorageKey(){ const j = document.getElementById('numeroJornadaInput').value || '1'; return 'save_jornada_num_' + j; }
 function cambiarJornadaManual(){ const jNum = document.getElementById('numeroJornadaInput').value || '1'; localStorage.setItem('save_ultima_jornada_vista', jNum); cargarDatos(); }
-
 function guardarDatos(){
     const jNum = document.getElementById('numeroJornadaInput').value || '1';
     const datos={jornada:jNum,formacion:document.getElementById('formacionSelect').value,numSuplentes:document.getElementById('numSuplentesInput').value,jugadores:[],mvpId:null,noAlineadosIds:[]};
@@ -165,7 +171,7 @@ function crearTarjetaJugador(p,id,s=false){
     const f=document.createElement('div');f.className='foto-container';f.dataset.imgId=id;const txtF=document.createElement('span');txtF.className='btn-subir-foto';txtF.innerText='👤';f.appendChild(txtF);
     const d=document.createElement('div');d.className='suplente-datos';const eqContainer=document.createElement('div');eqContainer.className='equipo-container';const escudo=document.createElement('div');escudo.className='escudo-miniatura';escudo.dataset.escudoId=id;
     const selEq=document.createElement('select');selEq.className='select-equipo';selEq.dataset.id=id;selEq.dataset.tipo='equipo';selEq.onchange=function(){actualizarEscudoVisual(id);guardarDatos();};equipos.forEach(eq=>{const o=document.createElement('option');o.value=eq;o.innerText=eq;selEq.appendChild(o);});eqContainer.appendChild(escudo);eqContainer.appendChild(selEq);
-    const ptsContainer=document.createElement('div');ptsContainer.className='pts-container';const inpPts=document.createElement('input');inpPts.type='number';inpPts.className='jugador-pts';inpPts.placeholder='0';inpPts.dataset.id=id;inpPts.dataset.tipo='pts';ptsContainer.appendChild(inpPts);inpPts.oninput=function(){ verificarPuntosDorados(id); guardarDatos(); };const labelPts=document.createElement('span');labelPts.className='label-pts';labelPts.innerText='pts';ptsContainer.appendChild(labelPts);
+    const ptsContainer=document.createElement('div');ptsContainer.className='pts-container';const inpPts=document.createElement('input');inpPts.type='number';inpPts.className='jugador-pts';inpPts.placeholder='0';inpPts.dataset.id=id;inpPts.dataset.tipo='pts';ptsContainer.appendChild(inpPts);inpPts.oninput=function(){ verificarPuntosDorados(id); guardarDatos(); };const labelPts=document.createElement('span');labelPts.className='label-pts';labelPts.innerText='pts';ptsContainer.appendChild(inpPts);ptsContainer.appendChild(labelPts);
     if(s){const row=document.createElement('div');row.className='suplente-row-inline';const selPos=document.createElement('select');selPos.className='select-posicion-suplente';selPos.dataset.id=id;selPos.dataset.tipo='posicion';selPos.onchange=guardarDatos;['POR','DEF','MED','DEL'].forEach(o=>{const opt=document.createElement('option');opt.value=o;opt.innerText=o;selPos.appendChild(opt);});row.appendChild(selPos);row.appendChild(nameContainer);d.appendChild(row);d.appendChild(eqContainer);d.appendChild(ptsContainer);c.appendChild(f);c.appendChild(d);return c;}else{c.appendChild(nameContainer);c.appendChild(f);c.appendChild(eqContainer);c.appendChild(ptsContainer);return c;}}
 function cambiarFormacion(save=true){const f=document.getElementById('formacionSelect').value;const[def,med,del]=f.split('-').map(Number);document.getElementById('linea-delanteros').innerHTML='';document.getElementById('linea-medios').innerHTML='';document.getElementById('linea-defensas').innerHTML='';document.getElementById('linea-portero').innerHTML='';document.getElementById('linea-portero').appendChild(crearTarjetaJugador('Portero','tit_por'));for(let i=0;i<def;i++)document.getElementById('linea-defensas').appendChild(crearTarjetaJugador('Defensa','tit_def_'+i));for(let i=0;i<med;i++)document.getElementById('linea-medios').appendChild(crearTarjetaJugador('Medio','tit_med_'+i));for(let i=0;i<del;i++)document.getElementById('linea-delanteros').appendChild(crearTarjetaJugador('Delantero','tit_del_'+i));document.querySelectorAll('.select-equipo').forEach(select=>{const id=select.dataset.id;actualizarEscudoVisual(id);actualizarFotoJugador(id);});if(save)guardarDatos();}
 function actualizarNumeroSuplentes(save=true){const l=document.getElementById('listaSuplentes');l.innerHTML='';let c=parseInt(document.getElementById('numSuplentesInput').value);if(isNaN(c)||c<0)c=0;if(c>18)c=18;for(let i=1;i<=c;i++){const cardComp=crearTarjetaJugador(`Sup ${i}`,`sup_${i}`,true);l.appendChild(cardComp);actualizarEscudoVisual(`sup_${i}`);actualizarFotoJugador(`sup_${i}`);}if(save)guardarDatos();}
