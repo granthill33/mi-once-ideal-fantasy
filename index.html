@@ -66,7 +66,6 @@
         </div>
     </div>
 
-    <!-- Canal indestructible global para subir tus fotos .webp -->
     <input type="file" id="globalImageInput" accept="image/*" style="display: none;">
 
     <div class="workspace">
@@ -88,7 +87,7 @@
         let idJugadorActivo = null;
 
         document.getElementById('globalImageInput').onchange = function(e) {
-            const file = e.target.files[0];
+            const file = e.target.files;
             if (file && idJugadorActivo) {
                 const reader = new FileReader();
                 reader.onload = function(ev) {
@@ -96,14 +95,35 @@
                     if (container) {
                         container.style.backgroundImage = `url('${ev.target.result}')`;
                         const txt = container.querySelector('.btn-subir-foto'); if (txt) txt.style.display = 'none';
-                        try { localStorage.setItem('img_' + idJugadorActivo, ev.target.result); guardarDatos(); } catch (err) { alert('La foto es demasiado pesada para el autoguardado rápido.'); }
+                        try { localStorage.setItem('img_' + idJugadorActivo, ev.target.result); guardarDatos(); } catch (err) { alert('Foto pesada para autoguardado rápido.'); }
                     }
                 }; reader.readAsDataURL(file);
             }
         };
 
         function activarSubidaFoto(id) { idJugadorActivo = id; document.getElementById('globalImageInput').click(); }
-        function actualizarEscudoVisual(idCard) { const select = document.querySelector(`[data-id="${idCard}"][data-tipo="equipo"]`); const divEscudo = document.querySelector(`[data-escudo-id="${idCard}"]`); if (select && divEscudo) divEscudo.style.backgroundImage = `url('escudos/${select.value}.png')`; }
+        
+        // CORRECCIÓN CON RUTA RELATIVA DE ORIGEN PARA ENLACE WEB REAL (./)
+        function actualizarEscudoVisual(idCard) { 
+            const select = document.querySelector(`[data-id="${idCard}"][data-tipo="equipo"]`); 
+            const divEscudo = document.querySelector(`[data-escudo-id="${idCard}"]`); 
+            if (select && divEscudo) divEscudo.style.backgroundImage = `url('./escudos/${select.value}.png')`; 
+        }
+
+        // CORRECCIÓN CON RUTA RELATIVA DE ORIGEN PARA IMÁGENES .WEBP DE JUGADORES (./)
+        function actualizarFotoJugador(idCard) {
+            const divFoto = document.querySelector(`[data-img-id="${idCard}"]`); if (!divFoto) return;
+            const savedImg = localStorage.getItem('img_' + idCard); const txtPlus = divFoto.querySelector('.btn-subir-foto');
+            if (savedImg) { divFoto.style.backgroundImage = `url('${savedImg}')`; if (txtPlus) txtPlus.style.display = 'none'; return; }
+            const inputNombre = document.querySelector(`[data-id="${idCard}"][data-tipo="nombre"]`); const nombre = inputNombre ? inputNombre.value.trim() : "";
+            if (nombre !== "") { 
+                divFoto.style.backgroundImage = `url('./jugadores/${nombre}.webp')`; 
+                if (txtPlus) txtPlus.style.display = 'none'; 
+            } else { 
+                divFoto.style.backgroundImage = 'none'; 
+                if (txtPlus) txtPlus.style.display = 'block'; 
+            }
+        }
 
         function guardarDatos(){
             const datos={formacion:document.getElementById('formacionSelect').value,numSuplentes:document.getElementById('numSuplentesInput').value,jugadores:[]};
@@ -122,8 +142,7 @@
                 const pts=document.querySelector(`[data-id="${id}"][data-tipo="pts"]`); if(pts)pts.value=J.pts||'';
                 const pos=document.querySelector(`[data-id="${id}"][data-tipo="posicion"]`); if(pos)pos.value=J.posicion||'POR';
                 const onc=document.querySelector(`[data-id="${id}"][data-tipo="onces"]`); if(onc)onc.value=J.onces||'0';
-                const imgData=localStorage.getItem('img_'+id);
-                if(imgData){ const container=document.querySelector(`[data-img-id="${id}"]`); if(container){ container.style.backgroundImage=`url('${imgData}')`; const span=container.querySelector('.btn-subir-foto'); if(span)span.style.display='none'; } }
+                actualizarFotoJugador(id);
             });
         }
 
@@ -132,7 +151,7 @@
         function crearTarjetaJugador(p,id,s=false) {
             const c=document.createElement('div'); c.className=s?'suplente-fila':'jugador-card';
             const nameContainer=document.createElement('div'); nameContainer.className='nombre-container';
-            const inp=document.createElement('input'); inp.type='text'; inp.className='jugador-input'; inp.placeholder=p; inp.dataset.id=id; inp.dataset.tipo='nombre'; inp.oninput=guardarDatos;
+            const inp=document.createElement('input'); inp.type='text'; inp.className='jugador-input'; inp.placeholder=p; inp.dataset.id=id; inp.dataset.tipo='nombre'; inp.oninput=function(){ actualizarFotoJugador(id); guardarDatos(); };
             const l1=document.createElement('span'); l1.style.fontSize="11px"; l1.style.color="#7c7c8a"; l1.innerText="(";
             const inpOnces=document.createElement('input'); inpOnces.type='number'; inpOnces.className='contador-onces'; inpOnces.value='0'; inpOnces.min='0'; inpOnces.dataset.id=id; inpOnces.dataset.tipo='onces'; inpOnces.oninput=guardarDatos;
             const l2=document.createElement('span'); l2.style.fontSize="11px"; l2.style.color="#7c7c8a"; l2.innerText=")";
@@ -163,14 +182,14 @@
             for(let i=0;i<def;i++)document.getElementById('linea-defensas').appendChild(crearTarjetaJugador('Defensa','tit_def_'+i));
             for(let i=0;i<med;i++)document.getElementById('linea-medios').appendChild(crearTarjetaJugador('Medio','tit_med_'+i));
             for(let i=0;i<del;i++)document.getElementById('linea-delanteros').appendChild(crearTarjetaJugador('Delantero','tit_del_'+i));
-            document.querySelectorAll('.select-equipo').forEach(select => { actualizarEscudoVisual(select.dataset.id); });
+            document.querySelectorAll('.select-equipo').forEach(select => { const id = select.dataset.id; actualizarEscudoVisual(id); actualizarFotoJugador(id); });
             if(save) guardarDatos();
         }
 
         function actualizarNumeroSuplentes(save=true){
             const l=document.getElementById('listaSuplentes'); l.innerHTML=''; let c=parseInt(document.getElementById('numSuplentesInput').value);
             if(isNaN(c)||c<0)c=0; if(c>25)c=25;
-            for(let i=1; i<=c; i++){ const cardComp=crearTarjetaJugador(`Sup ${i}`,`sup_${i}`,true); l.appendChild(cardComp); actualizarEscudoVisual(`sup_${i}`); }
+            for(let i=1; i<=c; i++){ const cardComp=crearTarjetaJugador(`Sup ${i}`,`sup_${i}`,true); l.appendChild(cardComp); actualizarEscudoVisual(`sup_${i}`); actualizarFotoJugador(`sup_${i}`); }
             if(save) guardarDatos();
         }
 
