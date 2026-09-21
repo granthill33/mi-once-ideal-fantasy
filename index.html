@@ -1,12 +1,13 @@
 <!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Equipo Ideal Jornada</title><style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;}body{background-color:#121214;color:#e1e1e6;padding:20px;display:flex;flex-direction:column;align-items:center;height:100vh;overflow:hidden;}
-/* CONTENEDOR EXCLUSIVO: COMPENSA EL BANQUILLO Y ALINEA TÍTULO Y BOTONES UNO ENCIERRA DEL OTRO */
-.bloque-cabecera-master{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;max-width:1115px;padding-right:440px;margin-bottom:15px;}
-.cabecera-jornada-contenedor{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:12px;text-align:center;}
+/* CONTENEDOR MAESTRO DE CABECERA: SE ENCAJA EXACTAMENTE CON LOS 650PX DEL CAMPO VERDE */
+.cabecera-master-campo{width:100%;max-width:650px;display:flex;flex-direction:column;align-items:center;margin-bottom:15px;}
+.cabecera-jornada-contenedor{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:12px;text-align:center;width:100%;}
 .cabecera-jornada-contenedor h1{color:#ffffff;text-shadow:0 2px 4px rgba(0,0,0,0.8);font-size:26px;font-weight:bold;margin:0;}
 .input-selector-jornada{width:52px;padding:4px;border-radius:6px;border:1px solid #323238;background-color:#202024;color:#4caf50;font-size:20px;font-weight:bold;text-align:center;outline:none;}
-.config-container{display:flex;gap:20px;background-color:#1a1a1e;padding:12px;border-radius:12px;border:1px solid #29292e;justify-content:center;flex-wrap:wrap;}
+.config-container{display:flex;gap:20px;background-color:#1a1a1e;padding:12px;border-radius:12px;border:1px solid #29292e;width:100%;justify-content:center;flex-wrap:wrap;}
 .config-group{display:flex;align-items:center;gap:10px;}.config-group select,.config-group input{padding:8px;border-radius:6px;border:1px solid #323238;background-color:#202024;color:white;font-weight:bold;}
+/* CONTENEDOR DE TRABAJO PRINCIPAL */
 .workspace{display:flex;gap:25px;max-width:1300px;width:100%;height:calc(100vh - 120px);justify-content:center;align-items:stretch;}
 .campo-futbol{width:100%;max-width:650px;aspect-ratio:3/4;border:4px solid #fff;border-radius:12px;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:15px 0;overflow:hidden;background:linear-gradient(90deg,#226e26 0%,#226e26 10%,#29802d 10%,#29802d 20%,#226e26 20%,#226e26 30%,#29802d 30%,#29802d 40%,#226e26 40%,#226e26 50%,#29802d 50%,#29802d 60%,#226e26 60%,#226e26 70%,#29802d 70%,#29802d 80%,#226e26 80%,#226e26 90%,#29802d 90%,#29802d 100%),radial-gradient(circle,rgba(255,255,255,0.15) 0%,rgba(0,0,0,0) 70%);background-blend-mode:overlay;}
 .campo-futbol::before{content:'';position:absolute;top:50%;left:0;width:100%;height:2px;background-color:rgba(255,255,255,0.7);}.campo-futbol::after{content:'';position:absolute;top:50%;left:50%;width:120px;height:120px;border:2px solid rgba(255, 255, 255, 0.7);border-radius:50%;transform:translate(-50%,-50%);}.area-penal{position:absolute;left:50%;transform:translateX(-50%);width:62%;height:16%;border:2px solid rgba(255,255,255,0.7);z-index:1;}.area-top{top:0;border-top:none;}.area-bottom{bottom:0;border-bottom:none;}.linea-jugadores{display:flex;justify-content:space-around;align-items:center;width:100%;height:23%;position:relative;z-index:2;}
@@ -16,11 +17,11 @@
 .pts-container{display:flex;align-items:center;justify-content:center;gap:4px;width:100%;}.jugador-pts{width:50px;background-color:#121214;border:1px solid #323238;color:#ffeb3b;font-weight:bold;font-size:11px;text-align:center;border-radius:4px;}.label-pts{font-size:11px;color:#ffeb3b;font-weight:bold;}.panel-suplentes{width:440px;background-color:#1a1a1e;padding:15px;border-radius:12px;border:1px solid #29292e;display:flex;flex-direction:column;overflow:hidden;}.panel-suplentes h2{font-size:18px;margin-bottom:12px;border-bottom:2px solid #4caf50;padding-bottom:6px;color:#4caf50;flex-shrink:0;}
 .lista-suplentes{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px;flex-grow:1;align-content:start;overflow-y:hidden;}.suplente-fila{display:flex;flex-direction:column;align-items:center;background-color:#202024;padding:6px;border-radius:8px;border:1px solid #29292e;justify-content:space-between;}.suplente-fila .foto-container{width:40px;height:40px;margin:2px 0;}.suplente-datos{display:flex;flex-direction:column;gap:3px;width:100%;}.suplente-row-inline{display:flex;gap:4px;align-items:center;width:100%;}
 .select-posicion-suplente{font-size:10px;background-color:#e05320;color:white;border:none;padding:2px;border-radius:4px;font-weight:bold;flex-shrink:0;}.btn-reset{padding:8px 12px;border:none;border-radius:6px;background-color:#e05320;color:white;font-weight:bold;cursor:pointer;}
-@media (max-width:950px){body{overflow:auto;height:auto;}.bloque-cabecera-master{padding-right:0;}.workspace{flex-direction:column;align-items:center;height:auto;}.panel-suplentes{width:100%;max-width:650px;}.lista-suplentes{grid-template-columns:repeat(auto-fit,minmax(130px,1fr));}}
+@media (max-width:950px){body{overflow:auto;height:auto;}.workspace{flex-direction:column;align-items:center;height:auto;}.panel-suplentes{width:100%;max-width:650px;}.lista-suplentes{grid-template-columns:repeat(auto-fit,minmax(130px,1fr));}}
 </style></head>
 <body>
-    <!-- AQUÍ SE ENCAJAN JUNTOS EL TÍTULO Y LA BARRA GRIS UNO ENCIERRA DEL OTRO -->
-    <div class="bloque-cabecera-master">
+    <!-- LA ESTRUCTURA MAESTRA DE CONTROL AHORA COMPARTE LOS 650PX EXACTOS DEL CÉSPED -->
+    <div class="cabecera-master-campo">
         <div class="cabecera-jornada-contenedor">
             <h1>Equipo Ideal Jornada</h1>
             <input type="number" id="numeroJornadaInput" value="1" min="1" max="50" class="input-selector-jornada" oninput="guardarDatos()">
