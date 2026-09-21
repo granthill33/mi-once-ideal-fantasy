@@ -19,9 +19,6 @@
 </style></head>
 <body>
     <body>
-    <div style="width: 100%; max-width: 650px; margin: 0 auto 15px auto; display: flex; justify-content: center; align-items: center; text-align: center;">
-        <h1 style="color: #4caf50; font-size: 26px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-weight: bold; margin: 0;">Equipo Ideal Jornada</h1>
-    </div>
     <div class="config-container">
         <div class="config-group">
             <label>Sistema:</label>
@@ -43,7 +40,11 @@
     </div>
     <div class="workspace">
         <div class="campo-futbol">
-            <div class="area-penal area-top"></div>
+            <!-- Título metido dentro del campo para que se mueva con él -->
+            <div style="width: 100%; display: flex; justify-content: center; position: absolute; top: 15px; z-index: 10; left: 0;">
+                <h1 style="color: #4caf50; font-size: 26px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-weight: bold; margin: 0; text-align: center;">Equipo Ideal Jornada</h1>
+            </div>
+            <div class="area-penal area-top" style="margin-top: 35px;"></div>
             <div class="linea-jugadores" id="linea-delanteros"></div>
             <div class="linea-jugadores" id="linea-medios"></div>
             <div class="linea-jugadores" id="linea-defensas"></div>
