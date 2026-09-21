@@ -179,24 +179,28 @@
         }
 
         function cambiarFormacion(save=true){
-            const f=document.getElementById('formacionSelect').value; const[def,med,del]=f.split('-').map(Number);
-            document.getElementById('linea-delanteros').innerHTML=''; document.getElementById('linea-medios').innerHTML=''; document.getElementById('linea-defensas').innerHTML=''; document.getElementById('linea-portero').innerHTML='';
-            document.getElementById('linea-portero').appendChild(crearTarjetaJugador('Portero','tit_por'));
-            for(let i=0;i<def;i++)document.getElementById('linea-defensas').appendChild(crearTarjetaJugador('Defensa','tit_def_'+i));
-            for(let i=0;i<med;i++)document.getElementById('linea-medios').appendChild(crearTarjetaJugador('Medio','tit_med_'+i));
-            for(let i=0;i<del;i++)document.getElementById('linea-delanteros').appendChild(crearTarjetaJugador('Delantero','tit_del_'+i));
-            document.querySelectorAll('.select-equipo').forEach(select => { const id = select.dataset.id; actualizarEscudoVisual(id); actualizarFotoJugador(id); });
-            if(save) guardarDatos();
+    if(save) { guardarDatos(); }
+    const f=document.getElementById('formacionSelect').value; const[def,med,del]=f.split('-').map(Number);
+    document.getElementById('linea-delanteros').innerHTML=''; document.getElementById('linea-medios').innerHTML=''; document.getElementById('linea-defensas').innerHTML=''; document.getElementById('linea-portero').innerHTML='';
+    document.getElementById('linea-portero').appendChild(crearTarjetaJugador('Portero','tit_por'));
+    for(let i=0;i<def;i++)document.getElementById('linea-defensas').appendChild(crearTarjetaJugador('Defensa','tit_def_'+i));
+    for(let i=0;i<med;i++)document.getElementById('linea-medios').appendChild(crearTarjetaJugador('Medio','tit_med_'+i));
+    for(let i=0;i<del;i++)document.getElementById('linea-delanteros').appendChild(crearTarjetaJugador('Delantero','tit_del_'+i));
+    if(!save) return;
+    const raw=localStorage.getItem('save_media'); if(!raw) return; const datos=JSON.parse(raw);
+    Object.keys(datos.jugadores).forEach(id=>{
+        if(id.startsWith('tit_')){
+            const J=datos.jugadores[id];
+            const txt=document.querySelector(`[data-id="${id}"][data-tipo="nombre"]`); if(txt && J.nombre) txt.value=J.nombre;
+            const eq=document.querySelector(`[data-id="${id}"][data-tipo="equipo"]`); if(eq && J.equipo) eq.value=J.equipo;
+            const pts=document.querySelector(`[data-id="${id}"][data-tipo="pts"]`); if(pts && J.pts) pts.value=J.pts;
+            const onc=document.querySelector(`[data-id="${id}"][data-tipo="onces"]`); if(onc && J.onces) onc.value=J.onces;
+            const pjd=document.querySelector(`[data-id="${id}"][data-tipo="partidos"]`); if(pjd && J.partidos) pjd.value=J.partidos;
         }
-
-        function actualizarNumeroSuplentes(save=true){
-            const l=document.getElementById('listaSuplentes'); l.innerHTML=''; let c=parseInt(document.getElementById('numSuplentesInput').value);
-            if(isNaN(c)||c<0)c=0; if(c>25)c=25;
-            for(let i=1; i<=c; i++){ const cardComp=crearTarjetaJugador(`Sup ${i}`,`sup_${i}`,true); l.appendChild(cardComp); actualizarEscudoVisual(`sup_${i}`); }
-            if(save) guardarDatos();
-        }
-
-        cambiarFormacion(false); actualizarNumeroSuplentes(false); cargarDatos();
+    });
+    document.querySelectorAll('.select-equipo').forEach(select => { const id = select.dataset.id; actualizarEscudoVisual(id); actualizarFotoJugador(id); });
+    guardarDatos();
+}
     </script>
 </body>
 </html>
