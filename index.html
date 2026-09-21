@@ -1,61 +1,24 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Equipo Ideal Jornada</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background-color: #121214; color: #e1e1e6; padding: 20px; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; }
-        
-        /* Contenedor del Título con Selector de Jornada */
-        .titulo-container { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .titulo-container h1 { color: #4caf50; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        .input-jornada { width: 50px; padding: 4px; border-radius: 6px; border: 1px solid #323238; background-color: #202024; color: #4caf50; font-size: 20px; font-weight: bold; text-align: center; outline: none; }
-        
-        .config-container { display: flex; gap: 20px; background-color: #1a1a1e; padding: 12px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #29292e; flex-wrap: wrap; justify-content: center; }
-        .config-group { display: flex; align-items: center; gap: 10px; }
-        .config-group select, .config-group input { padding: 8px; border-radius: 6px; border: 1px solid #323238; background-color: #202024; color: white; font-weight: bold; }
-        .workspace { display: flex; gap: 25px; max-width: 1300px; width: 100%; height: calc(100vh - 120px); justify-content: center; align-items: stretch; }
-        .campo-futbol { width: 100%; max-width: 650px; aspect-ratio: 3/4; border: 4px solid #fff; border-radius: 12px; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 15px 0; overflow: hidden; background: linear-gradient(90deg,#226e26 0%,#226e26 10%,#29802d 10%,#29802d 20%,#226e26 20%,#226e26 30%,#29802d 30%,#29802d 40%,#226e26 40%,#226e26 50%,#29802d 50%,#29802d 60%,#226e26 60%,#226e26 70%,#29802d 70%,#29802d 80%,#226e26 80%,#226e26 90%,#29802d 90%,#29802d 100%),radial-gradient(circle,rgba(255,255,255,0.15) 0%,rgba(0,0,0,0) 70%); background-blend-mode: overlay; }
-        .campo-futbol::before { content:''; position:absolute; top:50%; left:0; width:100%; height:2px; background-color:rgba(255,255,255,0.7); }
-        .campo-futbol::after { content:''; position:absolute; top:50%; left:50%; width:120px; height:120px; border:2px solid rgba(255, 255, 255, 0.7); border-radius:50%; transform:translate(-50%,-50%); }
-        .area-penal { position:absolute; left:50%; transform:translateX(-50%); width:62%; height:16%; border:2px solid rgba(255,255,255,0.7); z-index:1; }
-        .area-top { top:0; border-top:none; } .area-bottom { bottom:0; border-bottom:none; }
-        .linea-jugadores { display: flex; justify-content: space-around; align-items: center; width: 100%; height: 23%; position: relative; z-index: 2; }
-        .jugador-card { display: flex; flex-direction: column; align-items: center; width: 105px; background-color: rgba(18,18,20,0.85); padding: 6px; border-radius: 8px; border: 1px solid #323238; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .nombre-container { display: flex; align-items: center; width: 100%; gap: 2px; }
-        .jugador-input { flex-grow: 1; width: 10px; background: transparent; border: none; border-bottom: 1px solid #44444e; color: #fff; font-size: 11px; text-align: center; padding: 2px 0; }
-        .jugador-input:focus { outline: none; border-bottom-color: #4caf50; }
-        .contador-onces { width: 22px; font-size: 11px; background: transparent; border: none; color: #4caf50; font-weight: bold; text-align: center; outline: none; -moz-appearance: textfield; }
-        .contador-onces::-webkit-outer-spin-button, .contador-onces::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        .foto-container { width: 56px; height: 56px; background-color: #29292e; border-radius: 50%; border: 2px solid #fff; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; cursor: pointer; margin: 4px 0; background-size: cover; background-position: center; background-repeat: no-repeat; }
-        .btn-subir-foto { font-size: 18px; color: #7c7c8a; z-index: 1; pointer-events: none; }
-        .equipo-container { display: flex; align-items: center; gap: 4px; width: 100%; margin-bottom: 4px; }
-        .escudo-miniatura { width: 18px; height: 18px; background-color: #323238; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background-size: contain; background-position: center; background-repeat: no-repeat; }
-        .select-equipo { flex-grow: 1; width: 10px; background-color: #202024; color: #fff; border: 1px solid #323238; border-radius: 4px; font-size: 10px; padding: 2px; outline: none; }
-        .pts-container { display: flex; align-items: center; justify-content: center; gap: 4px; width: 100%; }
-        .jugador-pts { width: 50px; background-color: #121214; border: 1px solid #323238; color: #ffeb3b; font-weight: bold; font-size: 11px; text-align: center; border-radius: 4px; }
-        .label-pts { font-size: 11px; color: #ffeb3b; font-weight: bold; }
-        .panel-suplentes { width: 440px; background-color: #1a1a1e; padding: 15px; border-radius: 12px; border: 1px solid #29292e; display: flex; flex-direction: column; overflow: hidden; }
-        .panel-suplentes h2 { font-size: 18px; margin-bottom: 12px; border-bottom: 2px solid #4caf50; padding-bottom: 6px; color: #4caf50; flex-shrink: 0; }
-        .lista-suplentes { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 6px; flex-grow: 1; align-content: start; overflow-y: hidden; }
-        .suplente-fila { display: flex; flex-direction: column; align-items: center; background-color: #202024; padding: 6px; border-radius: 8px; border: 1px solid #29292e; justify-content: space-between; }
-        .suplente-fila .foto-container { width: 40px; height: 40px; margin: 2px 0; }
-        .suplente-datos { display: flex; flex-direction: column; gap: 3px; width: 100%; }
-        .suplente-row-inline { display: flex; gap: 4px; align-items: center; width: 100%; }
-        .select-posicion-suplente { font-size: 10px; background-color: #e05320; color: white; border: none; padding: 2px; border-radius: 4px; font-weight: bold; flex-shrink: 0; }
-        .btn-reset { padding: 8px 12px; border: none; border-radius: 6px; background-color: #e05320; color: white; font-weight: bold; cursor: pointer; }
-        @media (max-width: 950px) { body { overflow: auto; height: auto; } .workspace { flex-direction: column; align-items: center; height: auto; } .panel-suplentes { width: 100%; max-width: 650px; } .lista-suplentes { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); } }
-    </style>
-</head>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Equipo Ideal Jornada</title><style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;}body{background-color:#121214;color:#e1e1e6;padding:20px;display:flex;flex-direction:column;align-items:center;height:100vh;overflow:hidden;}h1{margin-bottom:15px;color:#4caf50;}
+.config-container{display:flex;gap:20px;background-color:#1a1a1e;padding:12px;border-radius:12px;margin-bottom:15px;border:1px solid #29292e;}.config-group{display:flex;align-items:center;gap:10px;}.config-group select,.config-group input{padding:8px;border-radius:6px;border:1px solid #323238;background-color:#202024;color:white;font-weight:bold;}
+.workspace{display:flex;gap:25px;max-width:1300px;width:100%;height:calc(100vh - 120px);justify-content:center;align-items:stretch;}
+.campo-futbol{width:100%;max-width:650px;aspect-ratio:3/4;border:4px solid #fff;border-radius:12px;position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:15px 0;overflow:hidden;background:linear-gradient(90deg,#226e26 0%,#226e26 10%,#29802d 10%,#29802d 20%,#226e26 20%,#226e26 30%,#29802d 30%,#29802d 40%,#226e26 40%,#226e26 50%,#29802d 50%,#29802d 60%,#226e26 60%,#226e26 70%,#29802d 70%,#29802d 80%,#226e26 80%,#226e26 90%,#29802d 90%,#29802d 100%),radial-gradient(circle,rgba(255,255,255,0.15) 0%,rgba(0,0,0,0) 70%);background-blend-mode:overlay;}
+.campo-futbol::before{content:'';position:absolute;top:50%;left:0;width:100%;height:2px;background-color:rgba(255,255,255,0.7);}.campo-futbol::after{content:'';position:absolute;top:50%;left:50%;width:120px;height:120px;border:2px solid rgba(255,255,255,0.7);border-radius:50%;transform:translate(-50%,-50%);}
+.area-penal{position:absolute;left:50%;transform:translateX(-50%);width:62%;height:16%;border:2px solid rgba(255,255,255,0.7);z-index:1;}.area-top{top:0;border-top:none;}.area-bottom{bottom:0;border-bottom:none;}.linea-jugadores{display:flex;justify-content:space-around;align-items:center;width:100%;height:23%;position:relative;z-index:2;}
+.jugador-card{display:flex;flex-direction:column;align-items:center;width:105px;background-color:rgba(18,18,20,0.85);padding:6px;border-radius:8px;border:1px solid #323238;box-shadow:0 4px 10px rgba(0,0,0,0.3);}
+.nombre-container{display:flex;align-items:center;width:100%;gap:2px;}.jugador-input{flex-grow:1;width:10px;background:transparent;border:none;border-bottom:1px solid #44444e;color:#fff;font-size:11px;text-align:center;padding:2px 0;}.jugador-input:focus{outline:none;border-bottom-color:#4caf50;}
+.contador-onces{width:22px;font-size:11px;background:transparent;border:none;color:#4caf50;font-weight:bold;text-align:center;outline:none;-moz-appearance:textfield;}.contador-onces::-webkit-outer-spin-button,.contador-onces::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.foto-container{width:56px;height:56px;background-color:#29292e;border-radius:50%;border:2px solid #fff;display:flex;justify-content:center;align-items:center;position:relative;overflow:hidden;margin:4px 0;background-size:cover;background-position:center;background-repeat:no-repeat;}.btn-subir-foto{font-size:18px;color:#7c7c8a;z-index:1;pointer-events:none;}
+.equipo-container{display:flex;align-items:center;gap:4px;width:100%;margin-bottom:4px;}.escudo-miniatura{width:18px;height:18px;background-color:#323238;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background-size:contain;background-position:center;background-repeat:no-repeat;}.select-equipo{flex-grow:1;width:10px;background-color:#202024;color:#fff;border:1px solid #323238;border-radius:4px;font-size:10px;padding:2px;outline:none;}
+.pts-container{display:flex;align-items:center;justify-content:center;gap:4px;width:100%;}.jugador-pts{width:50px;background-color:#121214;border:1px solid #323238;color:#ffeb3b;font-weight:bold;font-size:11px;text-align:center;border-radius:4px;}.label-pts{font-size:11px;color:#ffeb3b;font-weight:bold;}
+.panel-suplentes{width:440px;background-color:#1a1a1e;padding:15px;border-radius:12px;border:1px solid #29292e;display:flex;flex-direction:column;overflow:hidden;}.panel-suplentes h2{font-size:18px;margin-bottom:12px;border-bottom:2px solid #4caf50;padding-bottom:6px;color:#4caf50;flex-shrink:0;}
+.lista-suplentes{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px;flex-grow:1;align-content:start;overflow-y:hidden;}
+.suplente-fila{display:flex;flex-direction:column;align-items:center;background-color:#202024;padding:6px;border-radius:8px;border:1px solid #29292e;justify-content:space-between;}.suplente-fila .foto-container{width:40px;height:40px;margin:2px 0;}.suplente-datos{display:flex;flex-direction:column;gap:3px;width:100%;}.suplente-row-inline{display:flex;gap:4px;align-items:center;width:100%;}
+.select-posicion-suplente{font-size:10px;background-color:#e05320;color:white;border:none;padding:2px;border-radius:4px;font-weight:bold;flex-shrink:0;}.btn-reset{padding:8px 12px;border:none;border-radius:6px;background-color:#e05320;color:white;font-weight:bold;cursor:pointer;}
+@media (max-width:950px){body{overflow:auto;height:auto;}.workspace{flex-direction:column;align-items:center;height:auto;}.panel-suplentes{width:100%;max-width:650px;}.lista-suplentes{grid-template-columns:repeat(auto-fit,minmax(130px,1fr));}}
+</style></head>
 <body>
-    <!-- Título interactivo con caja de número de jornada -->
-    <div class="titulo-container">
-        <h1>Equipo Ideal Jornada</h1>
-        <input type="number" id="numeroJornadaInput" value="1" min="1" max="50" class="input-jornada" oninput="guardarDatos()">
-    </div>
-
+    <h1>Equipo Ideal Jornada</h1>
     <div class="config-container">
         <div class="config-group">
             <label>Sistema:</label>
@@ -75,9 +38,6 @@
             <button class="btn-reset" onclick="borrarTodo()">Borrar Todo</button>
         </div>
     </div>
-
-    <input type="file" id="globalImageInput" accept="image/*" style="display: none;">
-
     <div class="workspace">
         <div class="campo-futbol">
             <div class="area-penal area-top"></div>
@@ -92,111 +52,15 @@
             <div class="lista-suplentes" id="listaSuplentes"></div>
         </div>
     </div>
-    <script>
-        const equipos = ["Eibar","Oviedo","Las Palmas","Sporting","Osasuna","Recreativo","Marino","Levante","Cádiz","Real Unión","Lleida","Celta","Barcelona","Real Sociedad","Guadalajara","Coruxo","Alavés","Valencia","Huracán","Deportivo"];
-        let idJugadorActivo = null;
-
-        document.getElementById('globalImageInput').onchange = function(e) {
-            const file = e.target.files;
-            if (file && idJugadorActivo) {
-                const reader = new FileReader();
-                reader.onload = function(ev) {
-                    const container = document.querySelector(`[data-img-id="${idJugadorActivo}"]`);
-                    if (container) {
-                        container.style.backgroundImage = `url('${ev.target.result}')`;
-                        const txt = container.querySelector('.btn-subir-foto'); if (txt) txt.style.display = 'none';
-                        try { localStorage.setItem('img_' + idJugadorActivo, ev.target.result); guardarDatos(); } catch (err) { alert('Foto pesada para autoguardado rápido.'); }
-                    }
-                }; reader.readAsDataURL(file);
-            }
-        };
-
-        function activarSubidaFoto(id) { idJugadorActivo = id; document.getElementById('globalImageInput').click(); }
-        function actualizarEscudoVisual(idCard) { const select = document.querySelector(`[data-id="${idCard}"][data-tipo="equipo"]`); const divEscudo = document.querySelector(`[data-escudo-id="${idCard}"]`); if (select && divEscudo) divEscudo.style.backgroundImage = `url('./Escudos/${select.value}.png')`; }
-
-        function actualizarFotoJugador(idCard) {
-            const divFoto = document.querySelector(`[data-img-id="${idCard}"]`); if (!divFoto) return;
-            const savedImg = localStorage.getItem('img_' + idCard); const txtPlus = divFoto.querySelector('.btn-subir-foto');
-            if (savedImg) { divFoto.style.backgroundImage = `url('${savedImg}')`; if (txtPlus) txtPlus.style.display = 'none'; return; }
-            const inputNombre = document.querySelector(`[data-id="${idCard}"][data-tipo="nombre"]`); const nombre = inputNombre ? inputNombre.value.trim() : "";
-            if (nombre !== "") { 
-                const nombreFormateado = nombre.replace(/\s+/g, '_');
-                divFoto.style.backgroundImage = `url('./Jugadores/${nombreFormateado}.webp')`; 
-                if (txtPlus) txtPlus.style.display = 'none'; 
-            } else { divFoto.style.backgroundImage = 'none'; if (txtPlus) txtPlus.style.display = 'block'; }
-        }
-
-        function guardarDatos(){
-            // Se añade el número de jornada al autoguardado
-            const datos={jornada:document.getElementById('numeroJornadaInput').value,formacion:document.getElementById('formacionSelect').value,numSuplentes:document.getElementById('numSuplentesInput').value,jugadores:[]};
-            document.querySelectorAll('.workspace input, .workspace select').forEach(el=>{ const id=el.dataset.id; if(id){ if(!datos.jugadores[id])datos.jugadores[id]={}; datos.jugadores[id][el.dataset.tipo]=el.value; } });
-            localStorage.setItem('save_jornada_v2',JSON.stringify(datos));
-        }
-
-        function cargarDatos(){
-            const raw=localStorage.getItem('save_jornada_v2'); if(!raw)return; const datos=JSON.parse(raw);
-            if(datos.jornada) document.getElementById('numeroJornadaInput').value = datos.jornada;
-            document.getElementById('formacionSelect').value=datos.formacion; document.getElementById('numSuplentesInput').value=datos.numSuplentes;
-            cambiarFormacion(false); actualizarNumeroSuplentes(false);
-            Object.keys(datos.jugadores).forEach(id=>{
-                const J=datos.jugadores[id];
-                const txt=document.querySelector(`[data-id="${id}"][data-tipo="nombre"]`); if(txt) txt.value=J.nombre||'';
-                const eq=document.querySelector(`[data-id="${id}"][data-tipo="equipo"]`); if(eq){ eq.value=J.equipo||'Eibar'; actualizarEscudoVisual(id); }
-                const pts=document.querySelector(`[data-id="${id}"][data-tipo="pts"]`); if(pts)pts.value=J.pts||'';
-                const pos=document.querySelector(`[data-id="${id}"][data-tipo="posicion"]`); if(pos)pos.value=J.posicion||'POR';
-                const onc=document.querySelector(`[data-id="${id}"][data-tipo="onces"]`); if(onc)onc.value=J.onces||'0';
-                actualizarFotoJugador(id);
-            });
-        }
-
-        function borrarTodo(){ if(confirm('¿Borrar todo el historial?')){ localStorage.clear(); location.reload(); } }
-
-        function crearTarjetaJugador(p,id,s=false) {
-            const c=document.createElement('div'); c.className=s?'suplente-fila':'jugador-card';
-            const nameContainer=document.createElement('div'); nameContainer.className='nombre-container';
-            const inp=document.createElement('input'); inp.type='text'; inp.className='jugador-input'; inp.placeholder=p; inp.dataset.id=id; inp.dataset.tipo='nombre'; inp.oninput=function(){ actualizarFotoJugador(id); guardarDatos(); };
-            const l1=document.createElement('span'); l1.style.fontSize="11px"; l1.style.color="#7c7c8a"; l1.innerText="(";
-            const inpOnces=document.createElement('input'); inpOnces.type='number'; inpOnces.className='contador-onces'; inpOnces.value='0'; inpOnces.min='0'; inpOnces.dataset.id=id; inpOnces.dataset.tipo='onces'; inpOnces.oninput=guardarDatos;
-            const l2=document.createElement('span'); l2.style.fontSize="11px"; l2.style.color="#7c7c8a"; l2.innerText=")";
-            nameContainer.appendChild(inp); nameContainer.appendChild(l1); nameContainer.appendChild(inpOnces); nameContainer.appendChild(l2);
-            const f=document.createElement('div'); f.className='foto-container'; f.dataset.imgId=id; f.onclick = function() { activarSubidaFoto(id); };
-            const txtF=document.createElement('span'); txtF.className='btn-subir-foto'; txtF.innerText='+'; f.appendChild(txtF);
-            const d=document.createElement('div'); d.className='suplente-datos';
-            const eqContainer=document.createElement('div'); eqContainer.className='equipo-container';
-            const escudo=document.createElement('div'); escudo.className='escudo-miniatura'; escudo.dataset.escudoId=id;
-            const selEq=document.createElement('select'); selEq.className='select-equipo'; selEq.dataset.id=id; selEq.dataset.tipo='equipo'; selEq.onchange=function(){ actualizarEscudoVisual(id); guardarDatos(); };
-            equipos.forEach(eq=>{ const o=document.createElement('option'); o.value=eq; o.innerText=eq; selEq.appendChild(o); });
-            eqContainer.appendChild(escudo); eqContainer.appendChild(selEq);
-            const ptsContainer=document.createElement('div'); ptsContainer.className='pts-container';
-            const inpPts=document.createElement('input'); inpPts.type='number'; inpPts.className='jugador-pts'; inpPts.placeholder='0'; inpPts.dataset.id=id; inpPts.dataset.tipo='pts'; inpPts.oninput=guardarDatos;
-            const labelPts=document.createElement('span'); labelPts.className='label-pts'; labelPts.innerText='pts'; ptsContainer.appendChild(inpPts); ptsContainer.appendChild(labelPts);
-            if(s){
-                const row=document.createElement('div'); row.className='suplente-row-inline';
-                const selPos=document.createElement('select'); selPos.className='select-posicion-suplente'; selPos.dataset.id=id; selPos.dataset.tipo='posicion'; selPos.onchange=guardarDatos;
-                ['POR','DEF','MED','DEL'].forEach(o=>{ const opt=document.createElement('option'); opt.value=o; opt.innerText=o; selPos.appendChild(opt); });
-                row.appendChild(selPos); row.appendChild(nameContainer); d.appendChild(row); d.appendChild(eqContainer); d.appendChild(ptsContainer); c.appendChild(f); c.appendChild(d); return c;
-            }else{ c.appendChild(nameContainer); c.appendChild(f); c.appendChild(eqContainer); c.appendChild(ptsContainer); return c; }
-        }
-
-        function cambiarFormacion(save=true){
-            const f=document.getElementById('formacionSelect').value; const[def,med,del]=f.split('-').map(Number);
-            document.getElementById('linea-delanteros').innerHTML=''; document.getElementById('linea-medios').innerHTML=''; document.getElementById('linea-defensas').innerHTML=''; document.getElementById('linea-portero').innerHTML='';
-            document.getElementById('linea-portero').appendChild(crearTarjetaJugador('Portero','tit_por'));
-            for(let i=0;i<def;i++)document.getElementById('linea-defensas').appendChild(crearTarjetaJugador('Defensa','tit_def_'+i));
-            for(let i=0;i<med;i++)document.getElementById('linea-medios').appendChild(crearTarjetaJugador('Medio','tit_med_'+i));
-            for(let i=0;i<del;i++)document.getElementById('linea-delanteros').appendChild(crearTarjetaJugador('Delantero','tit_del_'+i));
-            document.querySelectorAll('.select-equipo').forEach(select => { const id = select.dataset.id; actualizarEscudoVisual(id); actualizarFotoJugador(id); });
-            if(save) guardarDatos();
-        }
-
-        function actualizarNumeroSuplentes(save=true){
-            const l=document.getElementById('listaSuplentes'); l.innerHTML=''; let c=parseInt(document.getElementById('numSuplentesInput').value);
-            if(isNaN(c)||c<0)c=0; if(c>25)c=25;
-            for(let i=1; i<=c; i++){ const cardComp=crearTarjetaJugador(`Sup ${i}`,`sup_${i}`,true); l.appendChild(cardComp); actualizarEscudoVisual(`sup_${i}`); }
-            if(save) guardarDatos();
-        }
-
-        cambiarFormacion(false); actualizarNumeroSuplentes(false); cargarDatos();
-    </script>
-</body>
-</html>
+<script>
+const equipos=["Eibar","Oviedo","Las Palmas","Sporting","Osasuna","Recreativo","Marino","Levante","Cádiz","Real Unión","Lleida","Celta","Barcelona","Real Sociedad","Guadalajara","Coruxo","Alavés","Valencia","Huracán","Deportivo"];
+function actualizarEscudoVisual(idCard){const select=document.querySelector(`[data-id="${idCard}"][data-tipo="equipo"]`);const divEscudo=document.querySelector(`[data-escudo-id="${idCard}"]`);if(select&&divEscudo)divEscudo.style.backgroundImage=`url('./Escudos/${select.value}.png')`;}
+function actualizarFotoJugador(idCard){const divFoto=document.querySelector(`[data-img-id="${idCard}"]`);if(!divFoto)return;const txtPlus=divFoto.querySelector('.btn-subir-foto');const inputNombre=document.querySelector(`[data-id="${idCard}"][data-tipo="nombre"]`);const nombre=inputNombre?inputNombre.value.trim():"";if(nombre!==""){const nombreFormateado=nombre.replace(/\s+/g,'_');divFoto.style.backgroundImage=`url('./Jugadores/${nombreFormateado}.webp')`;if(txtPlus)txtPlus.style.display='none';}else{divFoto.style.backgroundImage='none';if(txtPlus)txtPlus.style.display='block';}}
+function guardarDatos(){const datos={formacion:document.getElementById('formacionSelect').value,numSuplentes:document.getElementById('numSuplentesInput').value,jugadores:[]};document.querySelectorAll('.workspace input,.workspace select').forEach(el=>{const id=el.dataset.id;if(id){if(!datos.jugadores[id])datos.jugadores[id]={};datos.jugadores[id][el.dataset.tipo]=el.value;}});localStorage.setItem('save_jornada',JSON.stringify(datos));}
+function cargarDatos(){const raw=localStorage.getItem('save_jornada');if(!raw)return;const datos=JSON.parse(raw);document.getElementById('formacionSelect').value=datos.formacion;document.getElementById('numSuplentesInput').value=datos.numSuplentes;cambiarFormacion(false);actualizarNumeroSuplentes(false);Object.keys(datos.jugadores).forEach(id=>{const J=datos.jugadores[id];const txt=document.querySelector(`[data-id="${id}"][data-tipo="nombre"]`);if(txt){txt.value=J.nombre||'';}const eq=document.querySelector(`[data-id="${id}"][data-tipo="equipo"]`);if(eq){eq.value=J.equipo||'Eibar';actualizarEscudoVisual(id);}const pts=document.querySelector(`[data-id="${id}"][data-tipo="pts"]`);if(pts)pts.value=J.pts||'';const pos=document.querySelector(`[data-id="${id}"][data-tipo="posicion"]`);if(pos)pos.value=J.posicion||'POR';const onc=document.querySelector(`[data-id="${id}"][data-tipo="onces"]`);if(onc)onc.value=J.onces||'0';actualizarFotoJugador(id);});}
+function borrarTodo(){if(confirm('¿Borrar historial?')){localStorage.removeItem('save_jornada');location.reload();}}
+function crearTarjetaJugador(p,id,s=false){const c=document.createElement('div');c.className=s?'suplente-fila':'jugador-card';const nameContainer=document.createElement('div');nameContainer.className='nombre-container';const inp=document.createElement('input');inp.type='text';inp.className='jugador-input';inp.placeholder=p;inp.dataset.id=id;inp.dataset.tipo='nombre';inp.oninput=function(){actualizarFotoJugador(id);guardarDatos();};const l1=document.createElement('span');l1.style.fontSize="11px";l1.style.color="#7c7c8a";l1.innerText="(";const inpOnces=document.createElement('input');inpOnces.type='number';inpOnces.className='contador-onces';inpOnces.value='0';inpOnces.min='0';inpOnces.dataset.id=id;inpOnces.dataset.tipo='onces';inpOnces.oninput=guardarDatos;const l2=document.createElement('span');l2.style.fontSize="11px";l2.style.color="#7c7c8a";l2.innerText=")";nameContainer.appendChild(inp);nameContainer.appendChild(l1);nameContainer.appendChild(inpOnces);nameContainer.appendChild(l2);const f=document.createElement('div');f.className='foto-container';f.dataset.imgId=id;const txtF=document.createElement('span');txtF.className='btn-subir-foto';txtF.innerText='👤';f.appendChild(txtF);const d=document.createElement('div');d.className='suplente-datos';const eqContainer=document.createElement('div');eqContainer.className='equipo-container';const escudo=document.createElement('div');escudo.className='escudo-miniatura';escudo.dataset.escudoId=id;const selEq=document.createElement('select');selEq.className='select-equipo';selEq.dataset.id=id;selEq.dataset.tipo='equipo';selEq.onchange=function(){actualizarEscudoVisual(id);guardarDatos();};equipos.forEach(eq=>{const o=document.createElement('option');o.value=eq;o.innerText=eq;selEq.appendChild(o);});eqContainer.appendChild(escudo);eqContainer.appendChild(selEq);const ptsContainer=document.createElement('div');ptsContainer.className='pts-container';const inpPts=document.createElement('input');inpPts.type='number';inpPts.className='jugador-pts';inpPts.placeholder='0';inpPts.dataset.id=id;inpPts.dataset.tipo='pts';inpPts.oninput=guardarDatos;const labelPts=document.createElement('span');labelPts.className='label-pts';labelPts.innerText='pts';ptsContainer.appendChild(inpPts);ptsContainer.appendChild(labelPts);if(s){const row=document.createElement('div');row.className='suplente-row-inline';const selPos=document.createElement('select');selPos.className='select-posicion-suplente';selPos.dataset.id=id;selPos.dataset.tipo='posicion';selPos.onchange=guardarDatos;['POR','DEF','MED','DEL'].forEach(o=>{const opt=document.createElement('option');opt.value=o;opt.innerText=o;selPos.appendChild(opt);});row.appendChild(selPos);row.appendChild(nameContainer);d.appendChild(row);d.appendChild(eqContainer);d.appendChild(ptsContainer);c.appendChild(f);c.appendChild(d);return c;}else{c.appendChild(nameContainer);c.appendChild(f);c.appendChild(eqContainer);c.appendChild(ptsContainer);return c;}}
+function cambiarFormacion(save=true){const f=document.getElementById('formacionSelect').value;const[def,med,del]=f.split('-').map(Number);document.getElementById('linea-delanteros').innerHTML='';document.getElementById('linea-medios').innerHTML='';document.getElementById('linea-defensas').innerHTML='';document.getElementById('linea-portero').innerHTML='';document.getElementById('linea-portero').appendChild(crearTarjetaJugador('Portero','tit_por'));for(let i=0;i<def;i++)document.getElementById('linea-defensas').appendChild(crearTarjetaJugador('Defensa','tit_def_'+i));for(let i=0;i<med;i++)document.getElementById('linea-medios').appendChild(crearTarjetaJugador('Medio','tit_med_'+i));for(let i=0;i<del;i++)document.getElementById('linea-delanteros').appendChild(crearTarjetaJugador('Delantero','tit_del_'+i));document.querySelectorAll('.select-equipo').forEach(select=>{const id=select.dataset.id;actualizarEscudoVisual(id);actualizarFotoJugador(id);});if(save)guardarDatos();}
+function actualizarNumeroSuplentes(save=true){const l=document.getElementById('listaSuplentes');l.innerHTML='';let c=parseInt(document.getElementById('numSuplentesInput').value);if(isNaN(c)||c<0)c=0;if(c>25)c=25;for(let i=1;i<=c;i++){const cardComp=crearTarjetaJugador(`Sup ${i}`,`sup_${i}`,true);l.appendChild(cardComp);actualizarEscudoVisual(`sup_${i}`);actualizarFotoJugador(`sup_${i}`);}if(save)guardarDatos();}
+cambiarFormacion(false);actualizarNumeroSuplentes(false);cargarDatos();
+</script></body></html>
