@@ -44,9 +44,9 @@
 .btn-foto{padding:6px 12px;border:1px solid rgba(0,200,255,0.4);border-radius:4px;background-color:#202024;color:#00c8ff;font-weight:bold;cursor:pointer;font-size:12px;transition:background 0.2s, color 0.2s;margin-left:5px;}
 .btn-foto:hover{background-color:#00c8ff;color:white;}.btn-reset:hover{background-color:#ff4444;color:white;}
 @media (max-width:950px){body{overflow:auto;height:auto;}.workspace{flex-direction:column;align-items:center;height:auto;}.panel-suplentes{width:100%;max-width:650px;}.lista-suplentes{grid-template-columns:repeat(2, 1fr);}}
-</style>
-<script src="https://cloudflare.com"></script>
-</head>
+/* REGLA MÁGICA DE IMPRESIÓN NATIIVA COMPATIBLE CON GITHUB PAGES */
+@media print { body * { visibility: hidden; } #campoParaCaptura, #campoParaCaptura * { visibility: visible; } #campoParaCaptura { position: absolute; left: 0; top: 0; width: 100vw; max-width: 100%; height: 100vh; } .panel-control-interno { display: none !important; } }
+</style></head>
 <body><input type="file" id="globalImageInput" accept="image/*" style="display: none;"><div class="workspace"><div class="campo-futbol" id="campoParaCaptura"><div class="panel-control-interno"><div class="cabecera-jornada-contenedor"><h1>Equipo Ideal Jornada</h1><input type="number" id="numeroJornadaInput" value="1" min="1" max="50" class="input-selector-jornada" oninput="cambiarJornadaManual()"></div><div class="config-container"><div class="config-group"><label>Sistema:</label><select id="formacionSelect" onchange="cambiarFormacion()"><option value="4-4-2">4 - 4 - 2</option><option value="4-3-3">4 - 3 - 3</option><option value="3-5-2">3 - 5 - 2</option><option value="5-3-2">5 - 3 - 2</option><option value="4-5-1">4 - 5 - 1</option></select></div><div class="config-group"><label>Suplentes:</label><input type="number" id="numSuplentesInput" value="7" min="0" max="12" onchange="actualizarNumeroSuplentes()"></div><button class="btn-reset" onclick="borrarTodo()">Borrar Todo</button><button class="btn-foto" onclick="descargarImagenOnce()">Descargar Once 📸</button></div></div><div class="area-penal area-top"></div><div class="linea-jugadores" id="linea-delanteros" style="margin-top: 55px;"></div><div class="linea-jugadores" id="linea-medios"></div><div class="linea-jugadores" id="linea-defensas"></div><div class="linea-jugadores" id="linea-portero"></div><div class="area-penal area-bottom"></div><div class="marcador-total-campo"><span>TOTAL:</span><div class="caja-num" id="marcadorSumaTotal">0</div></div></div><div class="panel-suplentes"><h2>Banquillo</h2><div class="lista-suplentes" id="listaSuplentes"></div><div class="recuento-equipos-container"><div class="cabecera-recuento-dinamica"><h3>Jugadores por Club</h3><button class="btn-calcular-tabla" onclick="calcularRecuentoEquipos()">Actualizar Tabla 🔄</button></div><div class="lista-recuento-datos" id="recuentoEquiposLista"></div></div></div></div><script>
 const equipos=["Eibar","Oviedo","Las Palmas","Sporting","Osasuna","Recreativo","Marino","Levante","Cádiz","Real Unión","Lleida","Celta","Barcelona","Real Sociedad","Guadalajara","Coruxo","Alavés","Valencia","Huracán","Deportivo"];
 function actualizarEscudoVisual(idCard){const select=document.querySelector(`[data-id="${idCard}"][data-tipo="equipo"]`);const divEscudo=document.querySelector(`[data-escudo-id="${idCard}"]`);if(select&&divEscudo)divEscudo.style.backgroundImage=`url('./Escudos/${select.value}.png')`;calcularRecuentoEquipos();}
@@ -80,7 +80,6 @@ function calcularRecuentoEquipos(){
     });
     const listaHtml = document.getElementById('recuentoEquiposLista'); if(!listaHtml) return; listaHtml.innerHTML = '';
     
-    // ARREGLADO: CORRECCIÓN DE SINTAXIS ESTRICTA EN LA ORDENACIÓN EN CASCADA
     const ordenados = Object.entries(conteo).sort((a, b) => {
         const clubA = a[1]; const clubB = b[1];
         if (clubB.titularesCampo !== clubA.titularesCampo) { return clubB.titularesCampo - clubA.titularesCampo; }
@@ -136,15 +135,9 @@ function guardarDatos(){
     document.querySelectorAll('.workspace input,.workspace select').forEach(el=>{const id=el.dataset.id;if(id){if(!datos.jugadores[id])datos.jugadores[id]={};datos.jugadores[id][el.dataset.tipo]=el.value;}});
     localStorage.setItem(obtenerStorageKey(),JSON.stringify(datos));
 }
+// FUNCIÓN CORREGIDA NATIIVA: Genera la imagen/PDF perfecta sin depender de servidores business externos
 function descargarImagenOnce(){
-    const campo = document.getElementById('campoParaCaptura'); if(!campo) return;
-    const configCont = campo.querySelector('.config-container'); if(configCont) configCont.style.display = 'none';
-    html2canvas(campo, { useCORS: true, allowTaint: true, scale: 2 }).then(canvas => {
-        if(configCont) configCont.style.display = 'flex';
-        const link = document.createElement('a');
-        link.download = 'Once_Ideal_Jornada_' + (document.getElementById('numeroJornadaInput').value || '1') + '.png';
-        link.href = canvas.toDataURL('image/png'); link.click();
-    });
+    window.print();
 }
 function cargarDatos(){
     const jNum = document.getElementById('numeroJornadaInput').value || '1'; const raw = localStorage.getItem('save_jornada_num_' + jNum);
@@ -182,8 +175,8 @@ function crearTarjetaJugador(p,id,s=false){
     const ptsContainer=document.createElement('div');ptsContainer.className='pts-container';const inpPts=document.createElement('input');inpPts.type='number';inpPts.className='jugador-pts';inpPts.placeholder='0';inpPts.dataset.id=id;inpPts.dataset.tipo='pts';ptsContainer.appendChild(inpPts);inpPts.oninput=function(){ verificarPuntosDorados(id); guardarDatos(); };const labelPts=document.createElement('span');labelPts.className='label-pts';labelPts.innerText='pts';ptsContainer.appendChild(inpPts);ptsContainer.appendChild(labelPts);
     if(s){const row=document.createElement('div');row.className='suplente-row-inline';const selPos=document.createElement('select');selPos.className='select-posicion-suplente';selPos.dataset.id=id;selPos.dataset.tipo='posicion';selPos.onchange=guardarDatos;['POR','DEF','MED','DEL'].forEach(o=>{const opt=document.createElement('option');opt.value=o;opt.innerText=o;selPos.appendChild(opt);});row.appendChild(selPos);row.appendChild(nameContainer);d.appendChild(row);d.appendChild(eqContainer);d.appendChild(ptsContainer);c.appendChild(f);c.appendChild(d);return c;}else{c.appendChild(nameContainer);c.appendChild(f);c.appendChild(eqContainer);c.appendChild(ptsContainer);return c;}}
 function cambiarFormacion(save=true){const f=document.getElementById('formacionSelect').value;const[def,med,del]=f.split('-').map(Number);document.getElementById('linea-delanteros').innerHTML='';document.getElementById('linea-medios').innerHTML='';document.getElementById('linea-defensas').innerHTML='';document.getElementById('linea-portero').innerHTML='';document.getElementById('linea-portero').appendChild(crearTarjetaJugador('Portero','tit_por'));for(let i=0;i<def;i++)document.getElementById('linea-defensas').appendChild(crearTarjetaJugador('Defensa','tit_def_'+i));for(let i=0;i<med;i++)document.getElementById('linea-medios').appendChild(crearTarjetaJugador('Medio','tit_med_'+i));for(let i=0;i<del;i++)document.getElementById('linea-delanteros').appendChild(crearTarjetaJugador('Delantero','tit_del_'+i));document.querySelectorAll('.select-equipo').forEach(select=>{const id=select.dataset.id;actualizarEscudoVisual(id);actualizarFotoJugador(id);});if(save)guardarDatos();}
-function actualizarNumeroSuplentes(save=true){const l=document.getElementById('listaSuplentes');l.innerHTML='';let c=parseInt(document.getElementById('numSuplentesInput').value);if(isNaN(c)||c<0)c=0;if(c>12)c=12;for(let i=1;i<=c;i++){const cardComp=crearTarjetaJugador(`Sup ${i}`,`sup_${i}`,true);l.appendChild(cardComp);actualizarEscudoVisual(`sup_${i}`);actualizarFotoJugador(`sup_${i}`);}if(save)guardarDatos();}
+function actualizarNumeroSuplentes(save=true){const l=document.getElementById('listaSuplentes'); l.innerHTML='';let c=parseInt(document.getElementById('numSuplentesInput').value);if(isNaN(c)||c<0)c=0;if(c>12)c=12;for(let i=1;i<=c;i++){const cardComp=crearTarjetaJugador(`Sup ${i}`,`sup_${i}`,true);l.appendChild(cardComp);actualizarEscudoVisual(`sup_${i}`);actualizarFotoJugador(`sup_${i}`);}if(save)guardarDatos();}
 const ultimaJornada = localStorage.getItem('save_ultima_jornada_vista') || '1';
 document.getElementById('numeroJornadaInput').value = ultimaJornada;
-cambiarJornadaManual();
+cambiarFormacion(false);actualizarNumeroSuplentes(false);cargarDatos();
 </script></body></html>
