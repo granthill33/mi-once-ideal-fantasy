@@ -103,21 +103,21 @@
 
         function activarSubidaFoto(id) { idJugadorActivo = id; document.getElementById('globalImageInput').click(); }
         
-        // CORRECCIÓN CON RUTA RELATIVA DE ORIGEN PARA ENLACE WEB REAL (./)
+        // CORREGIDO: Busca en tu carpeta "Escudos" con E mayúscula
         function actualizarEscudoVisual(idCard) { 
             const select = document.querySelector(`[data-id="${idCard}"][data-tipo="equipo"]`); 
             const divEscudo = document.querySelector(`[data-escudo-id="${idCard}"]`); 
-            if (select && divEscudo) divEscudo.style.backgroundImage = `url('./escudos/${select.value}.png')`; 
+            if (select && divEscudo) divEscudo.style.backgroundImage = `url('./Escudos/${select.value}.png')`; 
         }
 
-        // CORRECCIÓN CON RUTA RELATIVA DE ORIGEN PARA IMÁGENES .WEBP DE JUGADORES (./)
+        // CORREGIDO: Busca en tu carpeta "Jugadores" con J mayúscula
         function actualizarFotoJugador(idCard) {
             const divFoto = document.querySelector(`[data-img-id="${idCard}"]`); if (!divFoto) return;
             const savedImg = localStorage.getItem('img_' + idCard); const txtPlus = divFoto.querySelector('.btn-subir-foto');
             if (savedImg) { divFoto.style.backgroundImage = `url('${savedImg}')`; if (txtPlus) txtPlus.style.display = 'none'; return; }
             const inputNombre = document.querySelector(`[data-id="${idCard}"][data-tipo="nombre"]`); const nombre = inputNombre ? inputNombre.value.trim() : "";
             if (nombre !== "") { 
-                divFoto.style.backgroundImage = `url('./jugadores/${nombre}.webp')`; 
+                divFoto.style.backgroundImage = `url('./Jugadores/${nombre}.webp')`; 
                 if (txtPlus) txtPlus.style.display = 'none'; 
             } else { 
                 divFoto.style.backgroundImage = 'none'; 
@@ -189,7 +189,7 @@
         function actualizarNumeroSuplentes(save=true){
             const l=document.getElementById('listaSuplentes'); l.innerHTML=''; let c=parseInt(document.getElementById('numSuplentesInput').value);
             if(isNaN(c)||c<0)c=0; if(c>25)c=25;
-            for(let i=1; i<=c; i++){ const cardComp=crearTarjetaJugador(`Sup ${i}`,`sup_${i}`,true); l.appendChild(cardComp); actualizarEscudoVisual(`sup_${i}`); actualizarFotoJugador(`sup_${i}`); }
+            for(let i=1; i<=c; i++){ const cardComp=crearTarjetaJugador(`Sup ${i}`,`sup_${i}`,true); l.appendChild(cardComp); actualizarEscudoVisual(`sup_${i}`); }
             if(save) guardarDatos();
         }
 
