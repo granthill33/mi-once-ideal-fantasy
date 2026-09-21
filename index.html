@@ -40,7 +40,6 @@
 .marcador-total-campo .caja-num{background-color:#121214;border:1px solid #323238;color:#ffeb3b;font-weight:bold;font-size:14px;padding:3px 8px;border-radius:4px;min-width:45px;text-align:center;}
 .suplente-fila{display:flex;flex-direction:column;align-items:center;background-color:#202024;padding:6px;border-radius:8px;border:1px solid #29292e;justify-content:space-between;position:relative;transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;}.suplente-fila .foto-container{width:40px;height:40px;margin:2px 0;}.suplente-datos{display:flex;flex-direction:column;gap:3px;width:100%;}.suplente-row-inline{display:flex;gap:4px;align-items:center;width:100%;}
 .select-posicion-suplente{font-size:10px;background-color:#e05320;color:white;border:none;padding:2px;border-radius:4px;font-weight:bold;flex-shrink:0;}
-/* DISEÑO CORREGIDO Y ESTILIZADO PARA EL BOTÓN BORRAR TODO */
 .btn-reset{padding:6px 12px;border:1px solid rgba(255,68,68,0.4);border-radius:4px;background-color:#202024;color:#ff4444;font-weight:bold;cursor:pointer;font-size:12px;transition:background 0.2s, color 0.2s, transform 0.1s;margin-left:5px;}.btn-reset:hover{background-color:#ff4444;color:white;transform:scale(1.03);}.btn-reset:active{transform:scale(0.97);}
 @media (max-width:950px){body{overflow:auto;height:auto;}.workspace{flex-direction:column;align-items:center;height:auto;}.panel-suplentes{width:100%;max-width:650px;}.lista-suplentes{grid-template-columns:repeat(auto-fit,minmax(130px,1fr));}}
 </style></head>
@@ -75,21 +74,26 @@ function calcularRecuentoEquipos(){
         }
     });
     const listaHtml = document.getElementById('recuentoEquiposLista'); if(!listaHtml) return; listaHtml.innerHTML = '';
+    
+    // SISTEMA DE ORDENACIÓN ARREGLADO Y BLINDADO DEFINITIVAMENTE
     const ordenados = Object.entries(conteo).sort((a,b)=>{
-        const totalA = a.total; const totalB = b.total;
-        const alA = totalA - a.noAlineados; const alB = totalB - b.noAlineados;
-        const pctA = Math.round((alA / totalA) * 10000); const pctB = Math.round((alB / totalB) * 10000);
-        if(pctB !== pctA) return pctB - pctA;
-        if(totalB !== totalA) return totalB - totalA;
-        return a.localeCompare(b);
+        const pctA = (a[1].total - a[1].noAlineados) / a[1].total;
+        const pctB = (b[1].total - b[1].noAlineados) / b[1].total;
+        // 1. Mandar arriba al que tenga mayor porcentaje de acierto
+        if (pctB !== pctA) { return pctB - pctA; }
+        // 2. Si empatan a porcentaje, va primero el que tenga más volumen total de jugadores
+        if (b[1].total !== a[1].total) { return b[1].total - a[1].total; }
+        // 3. Si empatan en todo, orden alfabético estricto
+        return a[0].localeCompare(b[0]);
     });
+
     let puestoActual = 1;
     ordenados.forEach(([equipo, datosClub], index)=>{
         if(index > 0){
             const previo = ordenados[index-1];
-            const pctPrevio = Math.round(((previo.total - previo.noAlineados) / previo.total) * 10000);
-            const pctActual = Math.round(((datosClub.total - datosClub.noAlineados) / datosClub.total) * 10000);
-            if(pctActual !== pctPrevio || datosClub.total !== previo.total){ puestoActual = index + 1; }
+            const pctPrevio = (previo[1].total - previo[1].noAlineados) / previo[1].total;
+            const pctActual = (datosClub.total - datosClub.noAlineados) / datosClub.total;
+            if(pctActual !== pctPrevio || datosClub.total !== previo[1].total){ puestoActual = index + 1; }
         }
         const alineadosReales = datosClub.total - datosClub.noAlineados;
         const porcentaje = Math.round((alineadosReales / datosClub.total) * 100);
