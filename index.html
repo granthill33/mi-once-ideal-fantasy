@@ -95,26 +95,33 @@
                     if (container) {
                         container.style.backgroundImage = `url('${ev.target.result}')`;
                         const txt = container.querySelector('.btn-subir-foto'); if (txt) txt.style.display = 'none';
-                        try { localStorage.setItem('img_' + idJugadorActivo, ev.target.result); guardarDatos(); } catch (err) { alert('Foto pesada para autoguardado rápido.'); }
+                        try { localStorage.setItem('img_' + idJugadorActivo, ev.target.result); guardarDatos(); } catch (err) { alert('Foto un poco pesada para el autoguardado.'); }
                     }
                 }; reader.readAsDataURL(file);
             }
         };
 
         function activarSubidaFoto(id) { idJugadorActivo = id; document.getElementById('globalImageInput').click(); }
-        function actualizarEscudoVisual(idCard) { const select = document.querySelector(`[data-id="${idCard}"][data-tipo="equipo"]`); const divEscudo = document.querySelector(`[data-escudo-id="${idCard}"]`); if (select && divEscudo) divEscudo.style.backgroundImage = `url('./Escudos/${select.value}.png')`; }
+        
+        // Carga los escudos adaptando el nombre del desplegable
+        function actualizarEscudoVisual(idCard) { 
+            const select = document.querySelector(`[data-id="${idCard}"][data-tipo="equipo"]`); 
+            const divEscudo = document.querySelector(`[data-escudo-id="${idCard}"]`); 
+            if (select && divEscudo) divEscudo.style.backgroundImage = `url('./Escudos/${select.value}.png')`; 
+        }
 
+        // LÓGICA DE FOTOS ULTRA-FLEXIBLE CONTRA ERRORES
         function actualizarFotoJugador(idCard) {
             const divFoto = document.querySelector(`[data-img-id="${idCard}"]`); if (!divFoto) return;
             const savedImg = localStorage.getItem('img_' + idCard); const txtPlus = divFoto.querySelector('.btn-subir-foto');
             if (savedImg) { divFoto.style.backgroundImage = `url('${savedImg}')`; if (txtPlus) txtPlus.style.display = 'none'; return; }
             
             const inputNombre = document.querySelector(`[data-id="${idCard}"][data-tipo="nombre"]`); 
-            const nombre = inputNombre ? inputNombre.value.trim() : "";
+            const nombreOriginal = inputNombre ? inputNombre.value.trim() : "";
             
-            if (nombre !== "") { 
-                // Convierte automáticamente los espacios en guiones bajos
-                const nombreFormateado = nombre.replace(/\s+/g, '_');
+            if (nombreOriginal !== "") { 
+                // El programa limpia espacios y busca el archivo tal cual se llama tu imagen real
+                const nombreFormateado = nombreOriginal.replace(/\s+/g, '_');
                 divFoto.style.backgroundImage = `url('./Jugadores/${nombreFormateado}.webp')`; 
                 if (txtPlus) txtPlus.style.display = 'none'; 
             } else { 
