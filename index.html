@@ -18,15 +18,17 @@
 .btn-mvp-estrella:hover, .btn-no-alineado:hover{transform:scale(1.25);}
 .btn-mvp-estrella.activo{color:#ffeb3b;text-shadow:0 0 6px rgba(255,235,59,0.8);}
 .btn-no-alineado.activo{color:#ff4444;text-shadow:0 0 6px rgba(255,68,68,0.8);}
-.nombre-container{display:flex;align-items:center;width:100%;gap:1px;}
-.tarjeta-dorada .nombre-container span { color: #ffffff !important; font-weight: bold; }
-.tarjeta-dorada .contador-onces { color: #4caf50 !important; font-weight: bold; }
-.jugador-input{flex-grow:1;width:10px;background:transparent;border:none;border-bottom:1px solid #44444e;color:#fff;font-size:11px;text-align:center;padding:2px 0;}.jugador-input:focus{outline:none;border-bottom-color:#4caf50;}
-.contador-onces{width:15px;font-size:11px;background:transparent;border:none;color:#4caf50;font-weight:bold;text-align:center;outline:none;-moz-appearance:textfield;}.contador-onces::-webkit-outer-spin-button,.contador-onces::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}.foto-container{width:56px;height:56px;background-color:#29292e;border-radius:50%;border:2px solid #fff;display:flex;justify-content:center;align-items:center;position:relative;overflow:hidden;margin:4px 0;background-size:cover;background-position:center;background-repeat:no-repeat;}.btn-subir-foto{font-size:18px;color:#7c7c8a;z-index:1;pointer-events:none;}
+.nombre-container{display:flex;align-items:center;width:100%;gap:4px;}
+.jugador-input{flex-grow:1;width:100%;background:transparent;border:none;border-bottom:1px solid #44444e;color:#fff;font-size:11px;text-align:left;padding:2px 0;text-overflow:ellipsis;}.jugador-input:focus{outline:none;border-bottom-color:#4caf50;}
+.wrapper-foto-onces{position:relative;width:56px;height:56px;margin:4px 0;}
+.suplente-fila .wrapper-foto-onces{width:40px;height:40px;}
+.foto-container{width:100%;height:100%;background-color:#29292e;border-radius:50%;border:2px solid #fff;display:flex;justify-content:center;align-items:center;overflow:hidden;background-size:cover;background-position:center;background-repeat:no-repeat;}.btn-subir-foto{font-size:18px;color:#7c7c8a;z-index:1;pointer-events:none;}
+.badge-onces-flotante{position:absolute;right:-4px;bottom:-2px;background-color:#121214;border:1px solid #4caf50;color:#4caf50;font-weight:bold;font-size:9px;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0;z-index:5;}
+.badge-onces-flotante input{width:100%;background:transparent;border:none;color:#4caf50;font-weight:bold;font-size:9px;text-align:center;outline:none;-moz-appearance:textfield;}.badge-onces-flotante input::-webkit-outer-spin-button,.badge-onces-flotante input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.tarjeta-dorada .badge-onces-flotante{border-color:#ffd700;color:#ffd700;}.tarjeta-dorada .badge-onces-flotante input{color:#ffd700;}
 .equipo-container{display:flex;align-items:center;gap:4px;width:100%;margin-bottom:4px;}.escudo-miniatura{width:18px;height:18px;background-color:#323238;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background-size:contain;background-position:center;background-repeat:no-repeat;}.select-equipo{flex-grow:1;width:10px;background-color:#202024;color:#fff;border:1px solid #323238;border-radius:4px;font-size:10px;padding:2px;outline:none;}
 .pts-container{display:flex;align-items:center;justify-content:center;gap:4px;width:100%;}.jugador-pts{width:50px;background-color:#121214;border:1px solid #323238;color:#ffeb3b;font-weight:bold;font-size:11px;text-align:center;border-radius:4px;}.label-pts{font-size:11px;color:#ffeb3b;font-weight:bold;}
 .panel-suplentes{width:440px;background-color:#1a1a1e;padding:15px;border-radius:12px;border:1px solid #29292e;display:flex;flex-direction:column;overflow:hidden;}.panel-suplentes h2{font-size:18px;margin-bottom:12px;border-bottom:2px solid #4caf50;padding-bottom:6px;color:#4caf50;flex-shrink:0;}
-/* BAANQUILLO EN DOS COLUMNAS AMPLIAS */
 .lista-suplentes{display:grid;grid-template-columns:repeat(2, 1fr);gap:6px;flex-grow:1;align-content:start;overflow-y:auto;height:52%;}
 .recuento-equipos-container{margin-top:15px;background-color:#202024;border:1px solid #29292e;border-radius:8px;padding:10px;height:40%;display:flex;flex-direction:column;flex-shrink:0;}
 .cabecera-recuento-dinamica{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #323238;padding-bottom:5px;margin-bottom:6px;}
@@ -39,12 +41,12 @@
 .marcador-total-campo{position:absolute;left:15px;bottom:15px;z-index:10;display:flex;align-items:center;gap:6px;background-color:rgba(18,18,20,0.85);padding:8px 12px;border-radius:6px;border:1px solid #4caf50;box-shadow:0 4px 10px rgba(0,0,0,0.5);}
 .marcador-total-campo span{font-size:12px;font-weight:bold;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,0.8);}
 .marcador-total-campo .caja-num{background-color:#121214;border:1px solid #323238;color:#ffeb3b;font-weight:bold;font-size:14px;padding:3px 8px;border-radius:4px;min-width:45px;text-align:center;}
-.suplente-fila{display:flex;flex-direction:column;align-items:center;background-color:#202024;padding:6px;border-radius:8px;border:1px solid #29292e;justify-content:space-between;position:relative;transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;}.suplente-fila .foto-container{width:40px;height:40px;margin:2px 0;}.suplente-datos{display:flex;flex-direction:column;gap:3px;width:100%;}.suplente-row-inline{display:flex;gap:4px;align-items:center;width:100%;}
+.suplente-fila{display:flex;flex-direction:column;align-items:center;background-color:#202024;padding:6px;border-radius:8px;border:1px solid #29292e;justify-content:space-between;position:relative;transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;}.suplente-datos{display:flex;flex-direction:column;gap:3px;width:100%;}.suplente-row-inline{display:flex;gap:4px;align-items:center;width:100%;}
 .select-posicion-suplente{font-size:10px;background-color:#e05320;color:white;border:none;padding:2px;border-radius:4px;font-weight:bold;flex-shrink:0;}
 .btn-reset{padding:6px 12px;border:1px solid rgba(255,68,68,0.4);border-radius:4px;background-color:#202024;color:#ff4444;font-weight:bold;cursor:pointer;font-size:12px;transition:background 0.2s, color 0.2s, transform 0.1s;margin-left:5px;}.btn-reset:hover{background-color:#ff4444;color:white;transform:scale(1.03);}.btn-reset:active{transform:scale(0.97);}
 @media (max-width:950px){body{overflow:auto;height:auto;}.workspace{flex-direction:column;align-items:center;height:auto;}.panel-suplentes{width:100%;max-width:650px;}.lista-suplentes{grid-template-columns:repeat(2, 1fr);}}
 </style></head>
-<body><input type="file" id="globalImageInput" accept="image/*" style="display: none;"><div class="workspace"><div class="campo-futbol"><div class="panel-control-interno"><div class="cabecera-jornada-contenedor"><h1>Equipo Ideal Jornada</h1><input type="number" id="numeroJornadaInput" value="1" min="1" max="50" class="input-selector-jornada" oninput="cambiarJornadaManual()"></div><div class="config-container"><div class="config-group"><label>Sistema:</label><select id="formacionSelect" onchange="cambiarFormacion()"><option value="4-4-2">4 - 4 - 2</option><option value="4-3-3">4 - 3 - 3</option><option value="3-5-2">3 - 5 - 2</option><option value="5-3-2">5 - 3 - 2</option><option value="4-5-1">4 - 5 - 1</option></select></div><div class="config-group"><label>Suplentes:</label><!-- MÁXIMO DE 12 SUPLENTES REAL --><input type="number" id="numSuplentesInput" value="7" min="0" max="12" onchange="actualizarNumeroSuplentes()"></div><button class="btn-reset" onclick="borrarTodo()">Borrar Todo</button></div></div><div class="area-penal area-top"></div><div class="linea-jugadores" id="linea-delanteros" style="margin-top: 55px;"></div><div class="linea-jugadores" id="linea-medios"></div><div class="linea-jugadores" id="linea-defensas"></div><div class="linea-jugadores" id="linea-portero"></div><div class="area-penal area-bottom"></div><div class="marcador-total-campo"><span>TOTAL:</span><div class="caja-num" id="marcadorSumaTotal">0</div></div></div><div class="panel-suplentes"><h2>Banquillo</h2><div class="lista-suplentes" id="listaSuplentes"></div><div class="recuento-equipos-container"><div class="cabecera-recuento-dinamica"><h3>Jugadores por Club</h3><button class="btn-calcular-tabla" onclick="calcularRecuentoEquipos()">Actualizar Tabla 🔄</button></div><div class="lista-recuento-datos" id="recuentoEquiposLista"></div></div></div></div><script>
+<body><input type="file" id="globalImageInput" accept="image/*" style="display: none;"><div class="workspace"><div class="campo-futbol"><div class="panel-control-interno"><div class="cabecera-jornada-contenedor"><h1>Equipo Ideal Jornada</h1><input type="number" id="numeroJornadaInput" value="1" min="1" max="50" class="input-selector-jornada" oninput="cambiarJornadaManual()"></div><div class="config-container"><div class="config-group"><label>Sistema:</label><select id="formacionSelect" onchange="cambiarFormacion()"><option value="4-4-2">4 - 4 - 2</option><option value="4-3-3">4 - 3 - 3</option><option value="3-5-2">3 - 5 - 2</option><option value="5-3-2">5 - 3 - 2</option><option value="4-5-1">4 - 5 - 1</option></select></div><div class="config-group"><label>Suplentes:</label><input type="number" id="numSuplentesInput" value="7" min="0" max="12" onchange="actualizarNumeroSuplentes()"></div><button class="btn-reset" onclick="borrarTodo()">Borrar Todo</button></div></div><div class="area-penal area-top"></div><div class="linea-jugadores" id="linea-delanteros" style="margin-top: 55px;"></div><div class="linea-jugadores" id="linea-medios"></div><div class="linea-jugadores" id="linea-defensas"></div><div class="linea-jugadores" id="linea-portero"></div><div class="area-penal area-bottom"></div><div class="marcador-total-campo"><span>TOTAL:</span><div class="caja-num" id="marcadorSumaTotal">0</div></div></div><div class="panel-suplentes"><h2>Banquillo</h2><div class="lista-suplentes" id="listaSuplentes"></div><div class="recuento-equipos-container"><div class="cabecera-recuento-dinamica"><h3>Jugadores por Club</h3><button class="btn-calcular-tabla" onclick="calcularRecuentoEquipos()">Actualizar Tabla 🔄</button></div><div class="lista-recuento-datos" id="recuentoEquiposLista"></div></div></div></div><script>
 const equipos=["Eibar","Oviedo","Las Palmas","Sporting","Osasuna","Recreativo","Marino","Levante","Cádiz","Real Unión","Lleida","Celta","Barcelona","Real Sociedad","Guadalajara","Coruxo","Alavés","Valencia","Huracán","Deportivo"];
 function actualizarEscudoVisual(idCard){const select=document.querySelector(`[data-id="${idCard}"][data-tipo="equipo"]`);const divEscudo=document.querySelector(`[data-escudo-id="${idCard}"]`);if(select&&divEscudo)divEscudo.style.backgroundImage=`url('./Escudos/${select.value}.png')`;calcularRecuentoEquipos();}
 function actualizarFotoJugador(idCard){const divFoto=document.querySelector(`[data-img-id="${idCard}"]`);if(!divFoto)return;const txtPlus=divFoto.querySelector('.btn-subir-foto');const inputNombre=document.querySelector(`[data-id="${idCard}"][data-tipo="nombre"]`);const nombre=inputNombre?inputNombre.value.trim():"";if(nombre!==""){const nombreFormateado=nombre.replace(/\s+/g,'_');divFoto.style.backgroundImage=`url('./Jugadores/${nombreFormateado}.webp')`;if(txtPlus)txtPlus.style.display='none';}else{divFoto.style.backgroundImage='none';if(txtPlus)txtPlus.style.display='block';}}
@@ -62,7 +64,6 @@ function sumarPuntosTitulares(){
     let suma = 0; document.querySelectorAll('.campo-futbol .jugador-pts').forEach(input => { const val = parseInt(input.value) || 0; suma += val; });
     const divMarcador = document.getElementById('marcadorSumaTotal'); if(divMarcador) divMarcador.innerText = suma;
 }
-
 function calcularRecuentoEquipos(){
     const conteo={};
     document.querySelectorAll('.workspace .select-equipo').forEach(select=>{
@@ -76,21 +77,15 @@ function calcularRecuentoEquipos(){
         }
     });
     const listaHtml = document.getElementById('recuentoEquiposLista'); if(!listaHtml) return; listaHtml.innerHTML = '';
-    
-    // ALGORITMO INTEGRAL DE PUNTUACIÓN DE CLASIFICACIÓN (BLINDADO)
     const ordenados = Object.entries(conteo).sort((a, b) => {
         const clubA = a[1]; const clubB = b[1];
         const pctA = (clubA.total - clubA.noAlineados) / clubA.total;
         const pctB = (clubB.total - clubB.noAlineados) / clubB.total;
-
-        // Puntuación absoluta por pesos matemáticos fijos
         const pesoA = (clubA.titularesCampo * 10000000) + (Math.round(pctA * 100) * 10000);
         const pesoB = (clubB.titularesCampo * 10000000) + (Math.round(pctB * 100) * 10000);
-
         if (pesoB !== pesoA) { return pesoB - pesoA; }
-        return a[0].localeCompare(b[0]); // Desempate alfabético nativo
+        return a[0].localeCompare(b[0]);
     });
-
     let puestoActual = 1;
     ordenados.forEach(([equipo, datosClub], index)=>{
         if(index > 0){
@@ -109,7 +104,6 @@ function calcularRecuentoEquipos(){
         bar.innerText = `${alineadosReales}/${datosClub.total} (${porcentaje}%)`; listaHtml.appendChild(item);
     });
 }
-
 function toggleMvp(idCard){
     const boton = document.querySelector(`[data-btn-mvp="${idCard}"]`);if(!boton) return;
     const yaActivo = boton.classList.contains('activo');
@@ -117,7 +111,6 @@ function toggleMvp(idCard){
     if(!yaActivo){ boton.classList.add('activo'); boton.innerText = '⭐'; }
     guardarDatos();
 }
-
 function toggleNoAlineado(idCard){
     const boton = document.querySelector(`[data-btn-noal="${idCard}"]`);if(!boton) return;
     const tarjeta = boton.closest('.jugador-card, .suplente-fila');
@@ -166,16 +159,16 @@ function crearTarjetaJugador(p,id,s=false){
     const c=document.createElement('div');c.className=s?'suplente-fila':'jugador-card';const nameContainer=document.createElement('div');nameContainer.className='nombre-container';
     if(!s){ const btnMvp = document.createElement('button');btnMvp.className = 'btn-mvp-estrella';btnMvp.innerText = '☆';btnMvp.dataset.btnMvp = id;btnMvp.onclick = function(e){ e.stopPropagation(); toggleMvp(id); }; nameContainer.appendChild(btnMvp); }
     const btnNoAl = document.createElement('button');btnNoAl.className = 'btn-no-alineado';btnNoAl.innerText = '▽';btnNoAl.dataset.btnNoal = id;btnNoAl.onclick = function(e){ e.stopPropagation(); toggleNoAlineado(id); };nameContainer.appendChild(btnNoAl);
-    const inp=document.createElement('input');inp.type='text';inp.className='jugador-input';inp.placeholder=p;inp.dataset.id=id;inp.dataset.tipo='nombre';inp.oninput=function(){actualizarFotoJugador(id);guardarDatos();};
-    const l1=document.createElement('span');l1.style.fontSize="11px";l1.style.color="#7c7c8a";l1.innerText="(";const inpOnces=document.createElement('input');inpOnces.type='number';inpOnces.className='contador-onces';inpOnces.value='0';inpOnces.min='0';inpOnces.dataset.id=id;inpOnces.dataset.tipo='onces';inpOnces.oninput=guardarDatos;const l2=document.createElement('span');l2.style.fontSize="11px";l2.style.color="#7c7c8a";l2.innerText=")";nameContainer.appendChild(inp);nameContainer.appendChild(l1);nameContainer.appendChild(inpOnces);nameContainer.appendChild(l2);
-    const f=document.createElement('div');f.className='foto-container';f.dataset.imgId=id;const txtF=document.createElement('span');txtF.className='btn-subir-foto';txtF.innerText='👤';f.appendChild(txtF);
+    const inp=document.createElement('input');inp.type='text';inp.className='jugador-input';inp.placeholder=p;inp.dataset.id=id;inp.dataset.tipo='nombre';inp.oninput=function(){actualizarFotoJugador(id);guardarDatos();};nameContainer.appendChild(inp);
+    const wFoto=document.createElement('div');wFoto.className='wrapper-foto-onces';const f=document.createElement('div');f.className='foto-container';f.dataset.imgId=id;const txtF=document.createElement('span');txtF.className='btn-subir-foto';txtF.innerText='👤';f.appendChild(txtF);wFoto.appendChild(f);
+    const badge=document.createElement('div');badge.className='badge-onces-flotante';const inpOnces=document.createElement('input');inpOnces.type='number';inpOnces.value='0';inpOnces.min='0';inpOnces.dataset.id=id;inpOnces.dataset.tipo='onces';inpOnces.oninput=guardarDatos;badge.appendChild(inpOnces);wFoto.appendChild(badge);
     const d=document.createElement('div');d.className='suplente-datos';const eqContainer=document.createElement('div');eqContainer.className='equipo-container';const escudo=document.createElement('div');escudo.className='escudo-miniatura';escudo.dataset.escudoId=id;
     const selEq=document.createElement('select');selEq.className='select-equipo';selEq.dataset.id=id;selEq.dataset.tipo='equipo';selEq.onchange=function(){actualizarEscudoVisual(id);guardarDatos();};equipos.forEach(eq=>{const o=document.createElement('option');o.value=eq;o.innerText=eq;selEq.appendChild(o);});eqContainer.appendChild(escudo);eqContainer.appendChild(selEq);
-    const ptsContainer=document.createElement('div');ptsContainer.className='pts-container';const inpPts=document.createElement('input');inpPts.type='number';inpPts.className='jugador-pts';inpPts.placeholder='0';inpPts.dataset.id=id;inpPts.dataset.tipo='pts';ptsContainer.appendChild(inpPts);inpPts.oninput=function(){ verificarPuntosDorados(id); guardarDatos(); };const labelPts=document.createElement('span');labelPts.className='label-pts';labelPts.innerText='pts';ptsContainer.appendChild(inpPts);ptsContainer.appendChild(labelPts);
-    if(s){const row=document.createElement('div');row.className='suplente-row-inline';const selPos=document.createElement('select');selPos.className='select-posicion-suplente';selPos.dataset.id=id;selPos.dataset.tipo='posicion';selPos.onchange=guardarDatos;['POR','DEF','MED','DEL'].forEach(o=>{const opt=document.createElement('option');opt.value=o;opt.innerText=o;selPos.appendChild(opt);});row.appendChild(selPos);row.appendChild(nameContainer);d.appendChild(row);d.appendChild(eqContainer);d.appendChild(ptsContainer);c.appendChild(f);c.appendChild(d);return c;}else{c.appendChild(nameContainer);c.appendChild(f);c.appendChild(eqContainer);c.appendChild(ptsContainer);return c;}}
+    const ptsContainer=document.createElement('div');ptsContainer.className='pts-container';const inpPts=document.createElement('input');inpPts.type='number';inpPts.className='jugador-pts';inpPts.placeholder='0';inpPts.dataset.id=id;inpPts.dataset.tipo='pts';ptsContainer.appendChild(inpPts);const labelPts=document.createElement('span');labelPts.className='label-pts';labelPts.innerText='pts';ptsContainer.appendChild(labelPts);inpPts.oninput=function(){ verificarPuntosDorados(id); guardarDatos(); };
+    if(s){const row=document.createElement('div');row.className='suplente-row-inline';const selPos=document.createElement('select');selPos.className='select-posicion-suplente';selPos.dataset.id=id;selPos.dataset.tipo='posicion';selPos.onchange=guardarDatos;['POR','DEF','MED','DEL'].forEach(o=>{const opt=document.createElement('option');opt.value=o;opt.innerText=o;selPos.appendChild(opt);});row.appendChild(selPos);row.appendChild(nameContainer);d.appendChild(row);d.appendChild(eqContainer);d.appendChild(ptsContainer);c.appendChild(wFoto);c.appendChild(d);return c;}else{c.appendChild(nameContainer);c.appendChild(wFoto);c.appendChild(eqContainer);c.appendChild(ptsContainer);return c;}}
 function cambiarFormacion(save=true){const f=document.getElementById('formacionSelect').value;const[def,med,del]=f.split('-').map(Number);document.getElementById('linea-delanteros').innerHTML='';document.getElementById('linea-medios').innerHTML='';document.getElementById('linea-defensas').innerHTML='';document.getElementById('linea-portero').innerHTML='';document.getElementById('linea-portero').appendChild(crearTarjetaJugador('Portero','tit_por'));for(let i=0;i<def;i++)document.getElementById('linea-defensas').appendChild(crearTarjetaJugador('Defensa','tit_def_'+i));for(let i=0;i<med;i++)document.getElementById('linea-medios').appendChild(crearTarjetaJugador('Medio','tit_med_'+i));for(let i=0;i<del;i++)document.getElementById('linea-delanteros').appendChild(crearTarjetaJugador('Delantero','tit_del_'+i));document.querySelectorAll('.select-equipo').forEach(select=>{const id=select.dataset.id;actualizarEscudoVisual(id);actualizarFotoJugador(id);});if(save)guardarDatos();}
 function actualizarNumeroSuplentes(save=true){const l=document.getElementById('listaSuplentes');l.innerHTML='';let c=parseInt(document.getElementById('numSuplentesInput').value);if(isNaN(c)||c<0)c=0;if(c>12)c=12;for(let i=1;i<=c;i++){const cardComp=crearTarjetaJugador(`Sup ${i}`,`sup_${i}`,true);l.appendChild(cardComp);actualizarEscudoVisual(`sup_${i}`);actualizarFotoJugador(`sup_${i}`);}if(save)guardarDatos();}
 const ultimaJornada = localStorage.getItem('save_ultima_jornada_vista') || '1';
 document.getElementById('numeroJornadaInput').value = ultimaJornada;
-cambiarFormacion(false);actualizarNumeroSuplentes(false);cargarDatos();
+cambiarJornadaManual();
 </script></body></html>
