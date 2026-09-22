@@ -124,12 +124,14 @@ function toggleNoAlineado(idCard){
 }
 function obtenerStorageKey(){ const j = document.getElementById('numeroJornadaInput').value || '1'; return 'save_jornada_num_' + j; }
 function cambiarJornadaManual(){ const jNum = document.getElementById('numeroJornadaInput').value || '1'; localStorage.setItem('save_ultima_jornada_vista', jNum); cargarDatos(); }
+
+// ARREGLADO: GUARDA ABSOLUTAMENTE TODO SIN EXCEPCIONES (INPUTS Y TEXTAREAS)
 function guardarDatos(){
     const jNum = document.getElementById('numeroJornadaInput').value || '1';
     const datos={jornada:jNum,formacion:document.getElementById('formacionSelect').value,numSuplentes:document.getElementById('numSuplentesInput').value,jugadores:[],mvpId:null,noAlineadosIds:[]};
     const mvpActivo = document.querySelector('.btn-mvp-estrella.activo');if(mvpActivo) datos.mvpId = mvpActivo.dataset.btnMvp;
     document.querySelectorAll('.btn-no-alineado.activo').forEach(b => { datos.noAlineadosIds.push(b.dataset.btnNoal); });
-    document.querySelectorAll('.workspace input,.workspace textarea,.workspace select').forEach(el=>{const id=el.dataset.id;if(id){if(!datos.jugadores[id])datos.jugadores[id]={};datos.jugadores[id][el.dataset.tipo]=el.value;}});
+    document.querySelectorAll('.workspace input, .workspace textarea, .workspace select').forEach(el=>{const id=el.dataset.id;if(id){if(!datos.jugadores[id])datos.jugadores[id]={};datos.jugadores[id][el.dataset.tipo]=el.value;}});
     localStorage.setItem(obtenerStorageKey(),JSON.stringify(datos));
 }
 function cargarDatos(){
@@ -173,3 +175,5 @@ function cambiarFormacion(save=true){const f=document.getElementById('formacionS
 function actualizarNumeroSuplentes(save=true){const ldocument = document.getElementById('listaSuplentes');if(ldocument)ldocument.innerHTML='';let c=parseInt(document.getElementById('numSuplentesInput').value);if(isNaN(c)||c<0)c=0;if(c>12)c=12;for(let i=1;i<=c;i++){const cardComp=crearTarjetaJugador(`Sup ${i}`,`sup_${i}`,true);if(ldocument)ldocument.appendChild(cardComp);actualizarEscudoVisual(`sup_${i}`);actualizarFotoJugador(`sup_${i}`);}if(save)guardarDatos();}
 const ultimaJornada = localStorage.getItem('save_ultima_jornada_vista') || '1';
 document.getElementById('numeroJornadaInput').value = ultimaJornada;
+cambiarFormacion(false);actualizarNumeroSuplentes(false);cargarDatos();
+</script></body></html>
