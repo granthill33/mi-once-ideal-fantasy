@@ -91,11 +91,8 @@ body{background-color:#0e0e10;color:#e1e1e6;padding:16px;display:flex;flex-direc
 .foto-container{width:100%;height:100%;background-color:#29292e;border-radius:50%;border:2px solid #fff;display:flex;justify-content:center;align-items:center;overflow:hidden;background-size:cover;background-position:center;background-repeat:no-repeat;cursor:pointer;}
 .foto-container.con-foto{cursor:default;}
 .btn-subir-foto{font-size:9px;color:#c8c8d0;z-index:1;text-align:center;line-height:1.1;padding:2px;}
-.badge-onces-flotante{position:absolute;right:-6px;bottom:-2px;background-color:#121214;border:1px solid #4caf50;color:#4caf50;font-weight:bold;font-size:9px;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0;z-index:5;}
-.badge-onces-flotante input{width:100%;background:transparent;border:none;color:#4caf50;font-weight:bold;font-size:9px;text-align:center;outline:none;-moz-appearance:textfield;}
-.badge-onces-flotante input::-webkit-outer-spin-button,.badge-onces-flotante input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.badge-onces-flotante{position:absolute;right:-12px;bottom:-3px;background-color:#121214;border:1px solid #4caf50;color:#4caf50;font-weight:bold;font-size:11px;line-height:1;border-radius:9px;min-width:24px;height:18px;display:flex;align-items:center;justify-content:center;padding:0 5px;z-index:5;white-space:nowrap;box-sizing:border-box;}
 .tarjeta-dorada .badge-onces-flotante{border-color:#ffd700;color:#ffd700;}
-.tarjeta-dorada .badge-onces-flotante input{color:#ffd700;}
 .equipo-container{display:flex;align-items:center;gap:4px;width:100%;margin-bottom:4px;}
 .escudo-miniatura{width:18px;height:18px;background-color:#323238;border-radius:4px;flex-shrink:0;background-size:contain;background-position:center;background-repeat:no-repeat;}
 .club-nombre{flex-grow:1;font-size:9px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -278,6 +275,7 @@ try {
 let jugadores = [];
 let porId = new Map();
 let slots = {};
+let vecesOtras = new Map();
 let jornadaActual = 1;
 let cargando = false;
 let sucio = false;
@@ -421,11 +419,35 @@ async function cargarJornada() {
       };
     });
   }
+  try { await cargarVeces(); }
+  catch (error) { cargando = false; mostrarEstado(error.message, true); return; }
   asegurarSlots();
   await pintarCampo();
   calcularRecuento();
   cargando = false;
   mostrarEstado("", false);
+}
+async function cargarVeces() {
+  const vistos = new Map();
+  let desde = 0;
+  const tam = 1000;
+  for (;;) {
+    const { data, error } = await cliente.from("ideal_lineup_slots").select("player_id,matchday_number").not("player_id", "is", null).neq("matchday_number", jornadaActual).range(desde, desde + tam - 1);
+    if (error) throw error;
+    (data || []).forEach(fila => {
+      const id = Number(fila.player_id);
+      if (!vistos.has(id)) vistos.set(id, new Set());
+      vistos.get(id).add(fila.matchday_number);
+    });
+    if (!data || data.length < tam) break;
+    desde += tam;
+  }
+  vecesOtras = new Map();
+  vistos.forEach((jornadas, id) => vecesOtras.set(id, jornadas.size));
+}
+function vecesDe(playerId) {
+  if (!playerId) return 0;
+  return (vecesOtras.get(Number(playerId)) || 0) + 1;
 }
 function lineaDe(clave) {
   if (clave === "tit_por") return "linea-portero";
@@ -532,15 +554,9 @@ function crearTarjeta(clave) {
   foto.onclick = () => pedirFoto(clave);
   const badge = document.createElement("div");
   badge.className = "badge-onces-flotante";
-  const onces = document.createElement("input");
-  onces.type = "number";
-  onces.min = "0";
-  onces.value = slot.appearances || 0;
-  onces.addEventListener("input", () => {
-    slots[clave].appearances = Math.max(0, parseInt(onces.value, 10) || 0);
-    programarGuardado();
-  });
-  badge.appendChild(onces);
+  const veces = jugador ? vecesDe(jugador.id) : 0;
+  badge.textContent = String(veces);
+  badge.title = jugador ? veces + " veces en el once" : "";
   fotoWrap.appendChild(foto);
   fotoWrap.appendChild(badge);
 
