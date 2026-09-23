@@ -609,6 +609,7 @@ function crearTarjeta(clave) {
       const elegido = jugadorDe(slots[clave]);
       if (elegido && elegido.position !== posicion.value) {
         slots[clave].playerId = null;
+        slots[clave].points = 0;
         slots[clave].isMvp = false;
         pintarCampo().then(calcularRecuento);
       }
@@ -730,6 +731,7 @@ function alternarNoAlineado(clave) {
 }
 function quitarJugador(clave) {
   slots[clave].playerId = null;
+  slots[clave].points = 0;
   slots[clave].isMvp = false;
   pintarCampo().then(calcularRecuento);
   programarGuardado();

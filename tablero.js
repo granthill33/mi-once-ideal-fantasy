@@ -335,6 +335,7 @@ function crearTarjeta(clave) {
       const elegido = jugadorDe(slots[clave]);
       if (elegido && elegido.position !== posicion.value) {
         slots[clave].playerId = null;
+        slots[clave].points = 0;
         pintarCampo().then(calcularRecuento);
       }
       programarGuardado();
@@ -377,7 +378,7 @@ async function pintarCampo() {
 function actualizarMarcador() {
   const valores = [];
   Object.entries(slots).forEach(([clave, slot]) => {
-    if (!clave.startsWith("tit_") || slot.points === null || slot.points === undefined || slot.points === "") return;
+    if (!clave.startsWith("tit_") || !slot.playerId || slot.points === null || slot.points === undefined || slot.points === "") return;
     const numero = Number(slot.points);
     if (!Number.isNaN(numero)) valores.push(numero);
   });
@@ -435,6 +436,7 @@ function calcularRecuento() {
 }
 function quitarJugador(clave) {
   slots[clave].playerId = null;
+  slots[clave].points = 0;
   pintarCampo().then(calcularRecuento);
   programarGuardado();
 }
